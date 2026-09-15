@@ -1,0 +1,38 @@
+{
+    "name": "adlens-shared",
+    "version": "0.1.0",
+    "description": "Shared Zod schemas (source of truth) + generated types for AdLens (frontend + backend)",
+    "type": "module",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "gen": "tsx scripts/gen-types.ts",
+        "gen:watch": "tsx scripts/gen-types.ts --watch",
+        "build": "npm run gen && tsup",
+        "prepare": "npm run gen && tsup"
+    },
+    "peerDependencies": {
+        "zod": "^4.4.3"
+    },
+    "devDependencies": {
+        "chokidar": "^3.6.0",
+        "tsup": "^8.5.0",
+        "tsx": "^4.19.2",
+        "typescript": "^5.7.0",
+        "zod": "^4.4.3"
+    }
+}
