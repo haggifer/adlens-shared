@@ -1,0 +1,13 @@
+# Changelog
+
+All notable changes to `adlens-shared` are documented here. This project follows [Semantic Versioning](https://semver.org/).
+
+## 0.2.0 — 2026-09-15
+
+### Added
+
+- `Job.execution` (optional string): the Cloud Run Job execution name that ran a job's analysis, recorded for traceability now that analysis runs as an on-demand Cloud Run Job instead of a BullMQ worker.
+
+## 0.1.0
+
+- Initial release: Zod schemas (the source of truth) and generated types for jobs and users, shared by the AdLens web app (ESM) and API (CJS) through a dual tsup build.

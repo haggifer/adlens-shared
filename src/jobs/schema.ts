@@ -87,6 +87,7 @@ export const jobSchema = z.object({
     media: jobMediaSchema.optional(),
     analysis: analysisSchema.optional(),
     error: z.string().optional(),
+    execution: z.string().optional(),
     createdAt: timestampSchema,
     updatedAt: timestampSchema,
 })

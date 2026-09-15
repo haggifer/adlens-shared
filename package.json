@@ -1,6 +1,6 @@
 {
     "name": "adlens-shared",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Shared Zod schemas (source of truth) + generated types for AdLens (frontend + backend)",
     "type": "module",
     "main": "./dist/index.cjs",
