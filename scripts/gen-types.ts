@@ -19,13 +19,23 @@ const fileExists = async (p: string) => {
     }
 }
 
+const removeTypes = async (typesPath: string) => {
+    const hasTypes = await fileExists(typesPath)
+
+    if (hasTypes) {
+        await rm(typesPath, { force: true })
+    }
+}
+
 // Generate (or delete) the types.ts sibling for one folder that contains a schema.ts.
 export const genFolder = async (dir: string) => {
     const schemaPath = path.join(dir, 'schema.ts')
     const typesPath = path.join(dir, 'types.ts')
 
-    if (!(await fileExists(schemaPath))) {
-        if (await fileExists(typesPath)) await rm(typesPath, { force: true })
+    const hasSchema = await fileExists(schemaPath)
+
+    if (!hasSchema) {
+        await removeTypes(typesPath)
         return
     }
 
@@ -34,7 +44,7 @@ export const genFolder = async (dir: string) => {
     const schemas = Object.keys(mod).filter((key) => mod[key] instanceof z.ZodType)
 
     if (!schemas.length) {
-        if (await fileExists(typesPath)) await rm(typesPath, { force: true })
+        await removeTypes(typesPath)
         return
     }
 
