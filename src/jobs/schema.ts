@@ -77,17 +77,21 @@ export const analysisSchema = z.object({
     completedAt: timestampSchema,
 })
 
-// The entity (a stored Job). Non-strict so a read tolerates fields added elsewhere.
-export const jobSchema = z.object({
-    id: z.string(),
+// The stored job document — source of truth for the `jobs` collection.
+export const jobDocSchema = z.object({
     userId: z.string(),
-    status: jobStatusSchema,
+    status: jobStatusSchema.default('pending'),
     settings: analysisSettingsSchema,
     file: jobFileSchema.nullable(),
     media: jobMediaSchema.optional(),
     analysis: analysisSchema.optional(),
     error: z.string().optional(),
     execution: z.string().optional(),
+})
+
+// The API-returned job (a stored Job): adds the string id (from _id) and ISO-string timestamps.
+export const jobSchema = jobDocSchema.extend({
+    id: z.string(),
     createdAt: timestampSchema,
     updatedAt: timestampSchema,
 })
