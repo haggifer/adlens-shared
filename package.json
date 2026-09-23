@@ -2,6 +2,10 @@
     "name": "adlens-shared",
     "version": "0.3.0",
     "description": "Shared Zod schemas (source of truth) + generated types for AdLens (frontend + backend)",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/haggifer/adlens-shared.git"
+    },
     "type": "module",
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
@@ -23,12 +27,15 @@
         "gen": "tsx scripts/gen-types.ts",
         "gen:watch": "tsx scripts/gen-types.ts --watch",
         "build": "npm run gen && tsup",
-        "prepare": "npm run gen && tsup"
+        "prepublishOnly": "npm run build",
+        "changeset": "changeset",
+        "version-packages": "changeset version"
     },
     "peerDependencies": {
         "zod": "^4.4.3"
     },
     "devDependencies": {
+        "@changesets/cli": "^2.31.1",
         "chokidar": "^3.6.0",
         "tsup": "^8.5.0",
         "tsx": "^4.19.2",
