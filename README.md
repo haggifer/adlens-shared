@@ -1,39 +1,44 @@
 # adlens-shared
 
-Shared **Zod schemas** for AdLens — the single source of truth for the data model — with TypeScript types generated from them. Consumed by both the `adlens` frontend and the `adlens-api` backend, so validation and types never drift.
+The AdLens API contract: **Zod schemas** that are the single source of truth for the data model, plus the
+TypeScript types inferred from them. The `adlens` web app (ESM) and the `adlens-api` backend (CommonJS) both
+consume it, so validation and types never drift between them.
 
 ## Install
 
-No npm registry — installed straight from GitHub:
-
 ```bash
-npm install github:haggifer/adlens-shared
+npm install adlens-shared zod
 ```
 
-Pin to a tag or commit for reproducibility:
-
-```bash
-npm install github:haggifer/adlens-shared#v0.4.0
-```
-
-npm clones the repo and runs the `prepare` script (`gen` + `tsc`) at install time, so consumers get compiled `dist/` with `.d.ts` declarations. If the repo is private, the installing machine needs Git credentials (a `gh`-configured git, an SSH key, or a token).
+`zod` (v4) is a peer dependency, so the consumer's own copy is used.
 
 ## Usage
 
 ```ts
-// runtime validators + inferred types both come from the package root
-import { createJobInputSchema, type Job, type Analysis } from 'adlens-shared'
+import { createJobInputSchema, type Job } from 'adlens-shared'
 ```
-
-Timestamp fields use `FirestoreTimestamp`, a structural type that both `firebase-admin` and `firebase` (client) `Timestamp` objects satisfy — so this package depends on neither SDK.
 
 ## Develop
 
-Schemas are the source of truth: edit `src/**/schema.ts`; the `gen` script regenerates the sibling `types.ts` files from the exported Zod schemas.
+Schemas live in `src/**/schema.ts`. `npm run build` regenerates the sibling `types.ts` files and bundles
+`dist/` (ESM + CJS + declarations) with tsup.
+
+To try unreleased changes in a consumer without touching its `package.json`:
 
 ```bash
-npm install     # runs prepare (gen + build) automatically
-npm run build   # gen + tsc → dist/
+npm pack                                                             # in adlens-shared
+npm install --no-save ../adlens-shared/adlens-shared-<version>.tgz   # in the consumer
 ```
 
-Bump the `version` in `package.json`, commit, tag, and push; consumers pull via `npm update adlens-shared` (or by re-pinning the tag).
+`file:` dependencies are never committed; each consumer has a `check:deps` guard against them.
+
+## Release
+
+Releases are published by CI with npm trusted publishing (OIDC, no token, provenance attached):
+
+1. Describe the change: `npx changeset` (pick patch / minor / major).
+2. Apply it: `npm run version-packages` bumps `version` and writes `CHANGELOG.md`. Commit both.
+3. Tag and push: `git tag v<version> && git push --follow-tags`. The `Release` workflow checks that the tag
+   matches `package.json` and runs `npm publish`.
+
+Consumers then receive a Dependabot pull request that bumps the exact pin.
