@@ -20,8 +20,16 @@ import { createJobInputSchema, type Job } from 'adlens-shared'
 
 ## Develop
 
-Schemas live in `src/**/schema.ts`. `npm run build` regenerates the sibling `types.ts` files and bundles
-`dist/` (ESM + CJS + declarations) with tsup.
+Schemas live in `src/**/schema.ts`, each followed by its inferred types (`z.output` for what the API returns,
+`z.input` for request bodies the client fills in). The package holds only the **contract**; the API composes its
+MongoDB document schemas from these building blocks, so storage details never leak into it.
+
+```bash
+npm run build          # tsup → dist/ (ESM + CJS, with .d.ts and .d.cts)
+npm test               # contract tests against the built package
+npm run lint
+npm run check:package  # publint + are-the-types-wrong
+```
 
 To try unreleased changes in a consumer without touching its `package.json`:
 
