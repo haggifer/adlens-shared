@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
-// Dual-format build so an ESM consumer (the Next.js frontend) and a CommonJS consumer (the NestJS
-// API) both import the package naturally. Types are generated once from the Zod schemas by `gen`.
+// Dual-format build so an ESM consumer (the Next.js frontend) and a CommonJS consumer (the NestJS API) both import
+// the package natively, each with its own declaration file (.d.ts / .d.cts).
 export default defineConfig({
     entry: ['src/index.ts'],
     format: ['esm', 'cjs'],
