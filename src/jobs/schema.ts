@@ -88,7 +88,6 @@ export const rulePlatformSchema = z.enum(RulePlatform)
 export const placementSchema = z.enum(Placement)
 export const marketSchema = z.enum(Market)
 export const videoMimeTypeSchema = z.enum(VideoMimeType)
-export const objectiveSchema = z.enum(['Conversion', 'Awareness', 'Consideration'])
 export const severitySchema = z.enum(['blocker', 'warning', 'info'])
 export const ruleScopeSchema = z.enum(['compliance', 'best_practice'])
 
@@ -98,7 +97,6 @@ export const analysisSettingsSchema = z
         platforms: z.array(platformSchema).default([]),
         placements: z.array(placementSchema).default([]),
         markets: z.array(marketSchema).default([]),
-        objective: objectiveSchema,
         audience: z.string().trim().max(500).optional(),
         brand: z.string().trim().max(2000).optional(),
     })
@@ -185,6 +183,8 @@ export const jobSchema = z.object({
     media: jobMediaSchema.optional(),
     analysis: analysisSchema.optional(),
     errorCode: jobErrorCodeSchema.optional(),
+    // Set when the job analyzes one of AdLens's sample ads instead of an upload.
+    sampleId: z.string().optional(),
     createdAt: isoTimestampSchema,
     updatedAt: isoTimestampSchema,
 })
@@ -220,7 +220,29 @@ export const jobVideoResponseSchema = z.object({
     expiresAt: isoTimestampSchema,
 })
 
-export type Objective = z.infer<typeof objectiveSchema>
+// A sample ad anyone can try: stored by AdLens and measured when it was published, with suggested settings.
+export const sampleSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    description: z.string(),
+    settings: analysisSettingsSchema,
+    media: jobMediaSchema,
+    contentType: videoMimeTypeSchema,
+    // Short-lived signed URL for previewing the video.
+    previewUrl: z.url(),
+})
+
+export const sampleListResponseSchema = z.object({
+    samples: z.array(sampleSchema),
+})
+
+// Analyzing a sample needs no upload: the job points at the stored sample, and the settings may differ from the
+// suggested ones.
+export const createSampleJobInputSchema = z.strictObject({
+    sampleId: z.string().min(1),
+    settings: analysisSettingsSchema,
+})
+
 export type Severity = z.infer<typeof severitySchema>
 export type RuleScope = z.infer<typeof ruleScopeSchema>
 export type AnalysisSettings = z.output<typeof analysisSettingsSchema>
@@ -240,3 +262,7 @@ export type CreateJobResponse = z.infer<typeof createJobResponseSchema>
 export type JobResponse = z.infer<typeof jobResponseSchema>
 export type JobListResponse = z.infer<typeof jobListResponseSchema>
 export type JobVideoResponse = z.infer<typeof jobVideoResponseSchema>
+export type Sample = z.infer<typeof sampleSchema>
+export type SampleListResponse = z.infer<typeof sampleListResponseSchema>
+export type CreateSampleJobInput = z.input<typeof createSampleJobInputSchema>
+export type CreateSampleJobPayload = z.output<typeof createSampleJobInputSchema>

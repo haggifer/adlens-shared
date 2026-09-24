@@ -5,27 +5,25 @@ import {
     analysisSettingsSchema,
     apiErrorCodeSchema,
     createJobInputSchema,
+    createSampleJobInputSchema,
     jobSchema,
     MAX_UPLOAD_BYTES,
     Placement,
     Platform,
+    sampleListResponseSchema,
     VideoMimeType,
 } from '../dist/index.js'
 
 const validFile = { name: 'ad.mp4', contentType: VideoMimeType.Mp4, size: 1000 }
 
 test('settings default the list fields and reject unknown keys', () => {
-    assert.deepEqual(analysisSettingsSchema.parse({ objective: 'Awareness' }), {
-        platforms: [],
-        placements: [],
-        markets: [],
-        objective: 'Awareness',
-    })
-    assert.equal(analysisSettingsSchema.safeParse({ objective: 'Awareness', userId: 'x' }).success, false)
+    assert.deepEqual(analysisSettingsSchema.parse({}), { platforms: [], placements: [], markets: [] })
+    assert.equal(analysisSettingsSchema.safeParse({ userId: 'x' }).success, false)
+    assert.equal(analysisSettingsSchema.safeParse({ objective: 'Awareness' }).success, false)
 })
 
 test('a placement requires its platform', () => {
-    const withoutPlatform = { objective: 'Conversion', placements: [Placement.MetaReels] }
+    const withoutPlatform = { placements: [Placement.MetaReels] }
     const withPlatform = { ...withoutPlatform, platforms: [Platform.Meta] }
 
     assert.equal(analysisSettingsSchema.safeParse(withoutPlatform).success, false)
@@ -33,7 +31,7 @@ test('a placement requires its platform', () => {
 })
 
 test('uploads are limited to Gemini-readable video types and the size cap', () => {
-    const settings = { objective: 'Conversion' }
+    const settings = {}
 
     assert.equal(createJobInputSchema.safeParse({ settings, file: validFile }).success, true)
     assert.equal(
@@ -50,7 +48,7 @@ test('the public job carries ISO timestamps and no storage internals', () => {
     const job = {
         id: 'j1',
         status: 'pending',
-        settings: { objective: 'Conversion' },
+        settings: {},
         file: validFile,
         createdAt: '2026-09-23T10:00:00.000Z',
         updatedAt: '2026-09-23T10:00:00.000Z',
@@ -59,6 +57,43 @@ test('the public job carries ISO timestamps and no storage internals', () => {
     assert.equal(jobSchema.safeParse(job).success, true)
     assert.equal(jobSchema.safeParse({ ...job, createdAt: new Date() }).success, false)
     assert.equal('userId' in jobSchema.parse({ ...job, userId: 'u1' }), false)
+    assert.equal(jobSchema.parse({ ...job, sampleId: 's1' }).sampleId, 's1')
+})
+
+test('a sample job names the sample and its settings, never a file or storage path', () => {
+    const settings = { platforms: [Platform.YouTube] }
+
+    assert.equal(createSampleJobInputSchema.safeParse({ sampleId: 's1', settings }).success, true)
+    assert.equal(createSampleJobInputSchema.safeParse({ sampleId: '', settings }).success, false)
+    assert.equal(
+        createSampleJobInputSchema.safeParse({ sampleId: 's1', settings, path: 'samples/a.mp4' }).success,
+        false,
+    )
+})
+
+test('samples are listed with measured media, suggested settings and a preview URL', () => {
+    const sample = {
+        id: 's1',
+        title: 'Running shoes',
+        description: 'A 15-second product spot',
+        settings: { platforms: [Platform.Meta], placements: [Placement.MetaReels] },
+        media: {
+            durationS: 15,
+            width: 1080,
+            height: 1920,
+            hasAudio: true,
+            sizeBytes: 5000,
+            contentType: VideoMimeType.Mp4,
+        },
+        contentType: VideoMimeType.Mp4,
+        previewUrl: 'https://storage.googleapis.com/bucket/samples/s1.mp4?X-Goog-Signature=abc',
+    }
+
+    assert.equal(sampleListResponseSchema.safeParse({ samples: [sample] }).success, true)
+    assert.equal(
+        sampleListResponseSchema.safeParse({ samples: [{ ...sample, previewUrl: 'not a url' }] }).success,
+        false,
+    )
 })
 
 test('api error codes cover job failures and request failures', () => {
