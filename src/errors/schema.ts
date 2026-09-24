@@ -14,6 +14,8 @@ export enum RequestErrorCode {
     UploadIncomplete = 'UPLOAD_INCOMPLETE',
     QuotaExceeded = 'QUOTA_EXCEEDED',
     JobNotPending = 'JOB_NOT_PENDING',
+    // The job is being verified or analyzed, so it can't be deleted yet.
+    JobInProgress = 'JOB_IN_PROGRESS',
     ValidationFailed = 'VALIDATION_FAILED',
     Unauthenticated = 'UNAUTHENTICATED',
     NotFound = 'NOT_FOUND',

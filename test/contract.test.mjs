@@ -99,6 +99,7 @@ test('samples are listed with measured media, suggested settings and a preview U
 test('api error codes cover job failures and request failures', () => {
     assert.equal(apiErrorCodeSchema.safeParse('VIDEO_TOO_LONG').success, true)
     assert.equal(apiErrorCodeSchema.safeParse('QUOTA_EXCEEDED').success, true)
+    assert.equal(apiErrorCodeSchema.safeParse('JOB_IN_PROGRESS').success, true)
 })
 
 test('the CommonJS build exposes the same API', () => {
