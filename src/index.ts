@@ -1,5 +1,6 @@
 export * from './common/constants.js'
 export * from './common/timestamp.js'
+export * from './contact/schema.js'
 export * from './errors/schema.js'
 export * from './jobs/schema.js'
 export * from './quota/schema.js'

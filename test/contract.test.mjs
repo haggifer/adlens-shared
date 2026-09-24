@@ -4,6 +4,7 @@ import { test } from 'node:test'
 import {
     analysisSettingsSchema,
     apiErrorCodeSchema,
+    contactMessageInputSchema,
     createJobInputSchema,
     createSampleJobInputSchema,
     jobSchema,
@@ -94,6 +95,16 @@ test('samples are listed with measured media, suggested settings and a preview U
         sampleListResponseSchema.safeParse({ samples: [{ ...sample, previewUrl: 'not a url' }] }).success,
         false,
     )
+})
+
+test('a contact message needs a reply address and a message, and may carry the honeypot', () => {
+    const message = { email: 'someone@example.com', message: 'I would like to know more about AdLens.' }
+
+    assert.equal(contactMessageInputSchema.safeParse(message).success, true)
+    assert.equal(contactMessageInputSchema.safeParse({ ...message, website: '' }).success, true)
+    assert.equal(contactMessageInputSchema.safeParse({ ...message, email: 'not an email' }).success, false)
+    assert.equal(contactMessageInputSchema.safeParse({ ...message, message: '   hi   ' }).success, false)
+    assert.equal(contactMessageInputSchema.safeParse({ ...message, userId: 'u1' }).success, false)
 })
 
 test('api error codes cover job failures and request failures', () => {
