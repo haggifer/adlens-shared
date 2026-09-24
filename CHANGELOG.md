@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.0
+
+### Minor Changes
+
+-   694ccf1: Add `contactMessageInputSchema` (and `CONTACT_MESSAGE_MAX_LENGTH`) for the Contact form: a reply address, the message, and an optional honeypot field.
+-   f71f15f: Add the `JOB_IN_PROGRESS` request error code, returned when deleting an analysis that is still being verified or analyzed.
+
 ## 0.6.0
 
 ### Minor Changes
