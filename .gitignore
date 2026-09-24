@@ -2,3 +2,7 @@ node_modules/
 dist/
 *.log
 *.tgz
+
+# Personal agent settings and notes
+.claude/
+CLAUDE.local.md
