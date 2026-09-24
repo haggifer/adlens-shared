@@ -36,7 +36,7 @@
         "check:package": "npx --yes publint && npx --yes @arethetypeswrong/cli --pack .",
         "prepublishOnly": "npm run build",
         "changeset": "changeset",
-        "version-packages": "changeset version"
+        "version-packages": "changeset version && npm install --package-lock-only"
     },
     "peerDependencies": {
         "zod": "^4.4.3"
