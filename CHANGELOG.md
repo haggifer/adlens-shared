@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.0
+
+### Minor Changes
+
+-   90394e1: Breaking: remove `audience` and `brand` from the analysis settings. No rule was selected or judged by them; they only
+    added free text to the review prompt. Settings now reject them as unknown keys.
+
 ## 0.7.0
 
 ### Minor Changes
