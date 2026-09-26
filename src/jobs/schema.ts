@@ -97,8 +97,6 @@ export const analysisSettingsSchema = z
         platforms: z.array(platformSchema).default([]),
         placements: z.array(placementSchema).default([]),
         markets: z.array(marketSchema).default([]),
-        audience: z.string().trim().max(500).optional(),
-        brand: z.string().trim().max(2000).optional(),
     })
     .refine((settings) => settings.placements.every((p) => settings.platforms.includes(PLACEMENT_PLATFORM[p])), {
         message: 'Each placement must belong to a selected platform',

@@ -21,6 +21,8 @@ test('settings default the list fields and reject unknown keys', () => {
     assert.deepEqual(analysisSettingsSchema.parse({}), { platforms: [], placements: [], markets: [] })
     assert.equal(analysisSettingsSchema.safeParse({ userId: 'x' }).success, false)
     assert.equal(analysisSettingsSchema.safeParse({ objective: 'Awareness' }).success, false)
+    assert.equal(analysisSettingsSchema.safeParse({ audience: 'Parents' }).success, false)
+    assert.equal(analysisSettingsSchema.safeParse({ brand: 'Acme' }).success, false)
 })
 
 test('a placement requires its platform', () => {
