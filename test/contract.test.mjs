@@ -11,6 +11,7 @@ import {
     MAX_UPLOAD_BYTES,
     Placement,
     Platform,
+    quotaSchema,
     sampleListResponseSchema,
     VideoMimeType,
 } from '../dist/index.js'
@@ -120,4 +121,10 @@ test('the CommonJS build exposes the same API', () => {
 
     assert.equal(typeof cjs.jobSchema.parse, 'function')
     assert.equal(cjs.MAX_UPLOAD_BYTES, MAX_UPLOAD_BYTES)
+})
+
+test('a quota is either capped or unlimited (null limit)', () => {
+    assert.equal(quotaSchema.safeParse({ used: 2, limit: 3, windowStart: null }).success, true)
+    assert.equal(quotaSchema.safeParse({ used: 40, limit: null, windowStart: null }).success, true)
+    assert.equal(quotaSchema.safeParse({ used: 0, limit: 0, windowStart: null }).success, false)
 })
