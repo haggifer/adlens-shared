@@ -57,14 +57,12 @@ export enum Market {
     Other = 'Other',
 }
 
-// MIME types Gemini accepts for video that browsers also report for the matching files.
+// MIME types Gemini accepts for video that browsers also report and can play: the app previews and replays the upload.
 export enum VideoMimeType {
     Mp4 = 'video/mp4',
     QuickTime = 'video/quicktime',
     WebM = 'video/webm',
-    Mpeg = 'video/mpeg',
     ThreeGpp = 'video/3gpp',
-    Flv = 'video/x-flv',
 }
 
 export const PLACEMENT_PLATFORM: Record<Placement, Platform> = {

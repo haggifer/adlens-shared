@@ -42,6 +42,10 @@ test('uploads are limited to Gemini-readable video types and the size cap', () =
         createJobInputSchema.safeParse({ settings, file: { ...validFile, contentType: 'video/x-matroska' } }).success,
         false,
     )
+
+    for (const contentType of ['video/mpeg', 'video/x-flv']) {
+        assert.equal(createJobInputSchema.safeParse({ settings, file: { ...validFile, contentType } }).success, false)
+    }
     assert.equal(
         createJobInputSchema.safeParse({ settings, file: { ...validFile, size: MAX_UPLOAD_BYTES + 1 } }).success,
         false,
