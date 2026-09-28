@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.0
+
+### Minor Changes
+
+-   29aa90a: Breaking: `VideoMimeType` drops `Mpeg` (`video/mpeg`) and `Flv` (`video/x-flv`). Gemini reads them, but browsers
+    can't play them, so the web app could neither preview nor replay such uploads.
+
 ## 0.9.0
 
 ### Minor Changes
