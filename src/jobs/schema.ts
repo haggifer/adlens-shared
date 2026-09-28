@@ -108,6 +108,9 @@ export const uploadFileSchema = z.strictObject({
     size: z.number().int().positive().max(MAX_UPLOAD_BYTES),
 })
 
+// A Cloudflare Turnstile token: single-use, at most 2048 characters. The API checks it only when a rule asks for one.
+const challengeTokenSchema = z.string().min(1).max(2048)
+
 // Facts measured from the uploaded object during verification, not taken from the client.
 export const jobMediaSchema = z.object({
     durationS: z.number().positive(),
@@ -188,6 +191,7 @@ export const jobSchema = z.object({
 export const createJobInputSchema = z.strictObject({
     settings: analysisSettingsSchema,
     file: uploadFileSchema,
+    challengeToken: challengeTokenSchema.optional(),
 })
 
 // Where and how to PUT the video: the client must send exactly these headers, because they are signed.
@@ -237,6 +241,7 @@ export const sampleListResponseSchema = z.object({
 export const createSampleJobInputSchema = z.strictObject({
     sampleId: z.string().min(1),
     settings: analysisSettingsSchema,
+    challengeToken: challengeTokenSchema.optional(),
 })
 
 export type Severity = z.infer<typeof severitySchema>

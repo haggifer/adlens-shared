@@ -13,6 +13,14 @@ export enum JobErrorCode {
 export enum RequestErrorCode {
     UploadIncomplete = 'UPLOAD_INCOMPLETE',
     QuotaExceeded = 'QUOTA_EXCEEDED',
+    // The analyses anonymous users may run from one network are used up; an account lifts that rule.
+    SignUpRequired = 'SIGN_UP_REQUIRED',
+    ChallengeRequired = 'CHALLENGE_REQUIRED',
+    ChallengeFailed = 'CHALLENGE_FAILED',
+    // Everyone on one network together reached its weekly cap.
+    NetworkQuotaExceeded = 'NETWORK_QUOTA_EXCEEDED',
+    // Sent by sign-up as a Better Auth error code, not in the API error body.
+    DisposableEmail = 'DISPOSABLE_EMAIL',
     JobNotPending = 'JOB_NOT_PENDING',
     // The job is being verified or analyzed, so it can't be deleted yet.
     JobInProgress = 'JOB_IN_PROGRESS',

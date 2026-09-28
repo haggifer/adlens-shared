@@ -52,6 +52,22 @@ test('uploads are limited to Gemini-readable video types and the size cap', () =
     )
 })
 
+test('job creation may carry a Turnstile token of up to 2048 characters', () => {
+    const settings = {}
+    const token = 'XXXX.DUMMY.TOKEN.XXXX'
+
+    assert.equal(createJobInputSchema.safeParse({ settings, file: validFile, challengeToken: token }).success, true)
+    assert.equal(createJobInputSchema.safeParse({ settings, file: validFile, challengeToken: '' }).success, false)
+    assert.equal(
+        createJobInputSchema.safeParse({ settings, file: validFile, challengeToken: 'x'.repeat(2049) }).success,
+        false,
+    )
+    assert.equal(
+        createSampleJobInputSchema.safeParse({ sampleId: 's1', settings, challengeToken: token }).success,
+        true,
+    )
+})
+
 test('the public job carries ISO timestamps and no storage internals', () => {
     const job = {
         id: 'j1',
@@ -114,10 +130,21 @@ test('a contact message needs a reply address and a message, and may carry the h
     assert.equal(contactMessageInputSchema.safeParse({ ...message, userId: 'u1' }).success, false)
 })
 
-test('api error codes cover job failures and request failures', () => {
-    assert.equal(apiErrorCodeSchema.safeParse('VIDEO_TOO_LONG').success, true)
-    assert.equal(apiErrorCodeSchema.safeParse('QUOTA_EXCEEDED').success, true)
-    assert.equal(apiErrorCodeSchema.safeParse('JOB_IN_PROGRESS').success, true)
+test('api error codes cover job failures, request failures and the limits on analysis without an account', () => {
+    const codes = [
+        'VIDEO_TOO_LONG',
+        'QUOTA_EXCEEDED',
+        'JOB_IN_PROGRESS',
+        'SIGN_UP_REQUIRED',
+        'CHALLENGE_REQUIRED',
+        'CHALLENGE_FAILED',
+        'NETWORK_QUOTA_EXCEEDED',
+        'DISPOSABLE_EMAIL',
+    ]
+
+    for (const code of codes) {
+        assert.equal(apiErrorCodeSchema.safeParse(code).success, true, code)
+    }
 })
 
 test('the CommonJS build exposes the same API', () => {
