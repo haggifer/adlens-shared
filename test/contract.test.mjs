@@ -127,8 +127,10 @@ test('the CommonJS build exposes the same API', () => {
     assert.equal(cjs.MAX_UPLOAD_BYTES, MAX_UPLOAD_BYTES)
 })
 
-test('a quota is either capped or unlimited (null limit)', () => {
-    assert.equal(quotaSchema.safeParse({ used: 2, limit: 3, windowStart: null }).success, true)
-    assert.equal(quotaSchema.safeParse({ used: 40, limit: null, windowStart: null }).success, true)
-    assert.equal(quotaSchema.safeParse({ used: 0, limit: 0, windowStart: null }).success, false)
+test('a quota counts recent runs, is capped or unlimited, and says when a run frees up', () => {
+    assert.equal(quotaSchema.safeParse({ used: 2, limit: 3, nextFreeAt: null }).success, true)
+    assert.equal(quotaSchema.safeParse({ used: 3, limit: 3, nextFreeAt: '2026-10-01T10:00:00.000Z' }).success, true)
+    assert.equal(quotaSchema.safeParse({ used: 40, limit: null, nextFreeAt: null }).success, true)
+    assert.equal(quotaSchema.safeParse({ used: 0, limit: 0, nextFreeAt: null }).success, false)
+    assert.equal(quotaSchema.safeParse({ used: 0, limit: 3, windowStart: null }).success, false)
 })
