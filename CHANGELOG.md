@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0
+
+### Minor Changes
+
+-   353f973: Add `MIN_PASSWORD_LENGTH` (8), the minimum password length the API enforces, so clients validate and hint with the
+    same value.
+
 ## 0.10.0
 
 ### Minor Changes
