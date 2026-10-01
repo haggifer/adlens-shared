@@ -56,8 +56,8 @@ Consumers then receive a Dependabot pull request that bumps the exact pin.
 
 ## Design decisions
 
--   **Schemas first, types inferred.** Types come from the schemas with `z.infer`, so there is no codegen step and a
-    type can't disagree with the validation that enforces it.
+-   **Schemas first, types inferred.** Types come from the schemas with `z.output` and `z.input`, so there is no codegen
+    step and a type can't disagree with the validation that enforces it.
 -   **The package holds only the contract.** Persistence schemas and server-only fields (owner, storage paths,
     accounting) live in the API, which composes its documents from these building blocks, so they can never reach a
     client.

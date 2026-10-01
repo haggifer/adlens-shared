@@ -14,7 +14,7 @@ export enum RequestErrorCode {
     UploadIncomplete = 'UPLOAD_INCOMPLETE',
     QuotaExceeded = 'QUOTA_EXCEEDED',
     // An anonymous user has run their one analysis, or the anonymous analyses allowed from one network are used up; an
-    // account lifts both rules.
+    // account with a confirmed email lifts both rules.
     SignUpRequired = 'SIGN_UP_REQUIRED',
     // The same rules for an account whose email isn't confirmed yet: confirming it lifts them.
     EmailConfirmationRequired = 'EMAIL_CONFIRMATION_REQUIRED',
@@ -25,7 +25,7 @@ export enum RequestErrorCode {
     // Sent by sign-up as a Better Auth error code, not in the API error body.
     DisposableEmail = 'DISPOSABLE_EMAIL',
     JobNotPending = 'JOB_NOT_PENDING',
-    // The job is being verified or analyzed, so it can't be deleted yet.
+    // The job is being verified, queued or analyzed, so it can't be deleted yet.
     JobInProgress = 'JOB_IN_PROGRESS',
     ValidationFailed = 'VALIDATION_FAILED',
     Unauthenticated = 'UNAUTHENTICATED',
