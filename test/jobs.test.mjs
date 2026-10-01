@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { performance } from 'node:perf_hooks'
 import {
     advisorySchema,
     analysisSchema,
@@ -70,6 +71,34 @@ test('settings default the list fields and reject unknown keys', () => {
     assert.equal(analysisSettingsSchema.safeParse({ objective: 'Awareness' }).success, false)
     assert.equal(analysisSettingsSchema.safeParse({ audience: 'Parents' }).success, false)
     assert.equal(analysisSettingsSchema.safeParse({ brand: 'Acme' }).success, false)
+})
+
+test('settings accept each option at most once, so no list outgrows its enum', () => {
+    const everything = {
+        platforms: Object.values(Platform),
+        placements: Object.values(Placement),
+        markets: Object.values(Market),
+    }
+
+    assert.equal(analysisSettingsSchema.safeParse(everything).success, true)
+    assert.equal(analysisSettingsSchema.safeParse({ platforms: ['Meta', 'Meta'] }).success, false)
+    assert.equal(analysisSettingsSchema.safeParse({ markets: ['US', 'US'] }).success, false)
+    assert.equal(
+        analysisSettingsSchema.safeParse({ platforms: ['Meta'], placements: ['meta_feed', 'meta_feed'] }).success,
+        false,
+    )
+})
+
+test('a request-sized flood of repeats is rejected quickly', () => {
+    // About the API's 1 MB body limit: before the caps, this blocked the event loop for seconds and then passed.
+    const flood = {
+        platforms: [...Array(70_000).fill('TikTok'), 'Meta'],
+        placements: Array(40_000).fill('meta_feed'),
+    }
+    const startedAt = performance.now()
+
+    assert.equal(analysisSettingsSchema.safeParse(flood).success, false)
+    assert.ok(performance.now() - startedAt < 200)
 })
 
 // ---- Upload file ----

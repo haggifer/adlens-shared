@@ -89,17 +89,30 @@ export const videoMimeTypeSchema = z.enum(VideoMimeType)
 export const severitySchema = z.enum(['blocker', 'warning', 'info'])
 export const ruleScopeSchema = z.enum(['compliance', 'best_practice'])
 
+// Each option at most once, so a list is never longer than its enum: the request body can't grow the stored job or the
+// prompt with repeats.
+const uniqueOptions = <T extends z.ZodEnum>(option: T) =>
+    z
+        .array(option)
+        .max(option.options.length)
+        .refine((list) => new Set(list).size === list.length, { message: 'Each option may be chosen only once' })
+        .default([])
+
 // Strict: a client can only set allowlisted fields. A placement is only valid with its platform selected.
 export const analysisSettingsSchema = z
     .strictObject({
-        platforms: z.array(platformSchema).default([]),
-        placements: z.array(placementSchema).default([]),
-        markets: z.array(marketSchema).default([]),
+        platforms: uniqueOptions(platformSchema),
+        placements: uniqueOptions(placementSchema),
+        markets: uniqueOptions(marketSchema),
     })
-    .refine((settings) => settings.placements.every((p) => settings.platforms.includes(PLACEMENT_PLATFORM[p])), {
-        message: 'Each placement must belong to a selected platform',
-        path: ['placements'],
-    })
+    .refine(
+        (settings) => {
+            const platforms = new Set(settings.platforms)
+
+            return settings.placements.every((placement) => platforms.has(PLACEMENT_PLATFORM[placement]))
+        },
+        { message: 'Each placement must belong to a selected platform', path: ['placements'] },
+    )
 
 // What the client declares about the file before uploading it.
 export const uploadFileSchema = z.strictObject({
