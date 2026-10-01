@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.14.1
+
+### Patch Changes
+
+-   Documentation only: corrected schema comments (`SIGN_UP_REQUIRED`, `JOB_IN_PROGRESS`, `challengeTokenSchema`,
+    `uploadTargetSchema`) and the README's note on how types are inferred. No change to any schema or export.
+
 ## 0.14.0
 
 ### Minor Changes
