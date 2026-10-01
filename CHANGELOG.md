@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.14.0
+
+### Minor Changes
+
+-   353e64a: Contact messages: the message cap drops from 5000 to 2000 characters (`CONTACT_MESSAGE_MAX_LENGTH`), and a message can
+    attach up to 5 images (PNG, JPEG or WebP; 8 MB each, 25 MB together). `createContactUploadsInputSchema` and
+    `createContactUploadsResponseSchema` describe the signed image uploads; `sendContactMessageInputSchema` is the request
+    body, which adds a Turnstile `challengeToken` or the uploads' single-use `draftId` to the visitor's fields
+    (`contactMessageInputSchema`). `challengeTokenSchema` is now exported.
+-   cb931f7: New request error code `EMAIL_CONFIRMATION_REQUIRED`: an account whose email isn't confirmed has run the one analysis it
+    may run before confirming. `SIGN_UP_REQUIRED` now also covers an anonymous user's one analysis.
+-   859693b: `analysisSettingsSchema` accepts each platform, placement and market at most once, so no list is longer than its enum;
+    a repeated option is rejected. Narrows what the API accepts.
+
 ## 0.13.0
 
 ### Minor Changes
