@@ -40,8 +40,8 @@ npm pack                                                             # in adlens
 npm install --no-save ../adlens-shared/adlens-shared-<version>.tgz   # in the consumer
 ```
 
-Any later `npm install` or `npm ci` in the consumer restores the pinned version. `file:` dependencies are never
-committed; each consumer has a `check:deps` guard against them.
+Any later `npm install` or `npm ci` in the consumer restores the pinned version. Consumers pin a published version,
+never a `file:` dependency, which would only resolve on a developer's machine.
 
 ## Release
 
