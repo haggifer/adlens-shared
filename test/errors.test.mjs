@@ -25,6 +25,7 @@ test('RequestErrorCode pins the codes a request can fail with', () => {
         'UPLOAD_INCOMPLETE',
         'QUOTA_EXCEEDED',
         'SIGN_UP_REQUIRED',
+        'EMAIL_CONFIRMATION_REQUIRED',
         'CHALLENGE_REQUIRED',
         'CHALLENGE_FAILED',
         'NETWORK_QUOTA_EXCEEDED',

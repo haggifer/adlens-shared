@@ -13,8 +13,11 @@ export enum JobErrorCode {
 export enum RequestErrorCode {
     UploadIncomplete = 'UPLOAD_INCOMPLETE',
     QuotaExceeded = 'QUOTA_EXCEEDED',
-    // The analyses anonymous users may run from one network are used up; an account lifts that rule.
+    // An anonymous user has run their one analysis, or the anonymous analyses allowed from one network are used up; an
+    // account lifts both rules.
     SignUpRequired = 'SIGN_UP_REQUIRED',
+    // The same rules for an account whose email isn't confirmed yet: confirming it lifts them.
+    EmailConfirmationRequired = 'EMAIL_CONFIRMATION_REQUIRED',
     ChallengeRequired = 'CHALLENGE_REQUIRED',
     ChallengeFailed = 'CHALLENGE_FAILED',
     // Everyone on one network together reached its weekly cap.
