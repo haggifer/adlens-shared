@@ -80,15 +80,6 @@ export const PLACEMENT_PLATFORM: Record<Placement, Platform> = {
     [Placement.AmazonSponsoredBrandsVideo]: Platform.Amazon,
 }
 
-export const jobStatusSchema = z.enum(JobStatus)
-export const platformSchema = z.enum(Platform)
-export const rulePlatformSchema = z.enum(RulePlatform)
-export const placementSchema = z.enum(Placement)
-export const marketSchema = z.enum(Market)
-export const videoMimeTypeSchema = z.enum(VideoMimeType)
-export const severitySchema = z.enum(['blocker', 'warning', 'info'])
-export const ruleScopeSchema = z.enum(['compliance', 'best_practice'])
-
 // Each option at most once, so a list is never longer than its enum: the request body can't grow the stored job or the
 // prompt with repeats.
 const uniqueOptions = <T extends z.ZodEnum>(option: T) =>
@@ -98,6 +89,21 @@ const uniqueOptions = <T extends z.ZodEnum>(option: T) =>
         .refine((list) => new Set(list).size === list.length, { message: 'Each option may be chosen only once' })
         .default([])
 
+const hasPlacementsOnSelectedPlatforms = (settings: { platforms: Platform[]; placements: Placement[] }) => {
+    const platforms = new Set(settings.platforms)
+
+    return settings.placements.every((placement) => platforms.has(PLACEMENT_PLATFORM[placement]))
+}
+
+export const jobStatusSchema = z.enum(JobStatus)
+export const platformSchema = z.enum(Platform)
+export const rulePlatformSchema = z.enum(RulePlatform)
+export const placementSchema = z.enum(Placement)
+export const marketSchema = z.enum(Market)
+export const videoMimeTypeSchema = z.enum(VideoMimeType)
+export const severitySchema = z.enum(['blocker', 'warning', 'info'])
+export const ruleScopeSchema = z.enum(['compliance', 'best_practice'])
+
 // Strict: a client can only set allowlisted fields. A placement is only valid with its platform selected.
 export const analysisSettingsSchema = z
     .strictObject({
@@ -105,14 +111,10 @@ export const analysisSettingsSchema = z
         placements: uniqueOptions(placementSchema),
         markets: uniqueOptions(marketSchema),
     })
-    .refine(
-        (settings) => {
-            const platforms = new Set(settings.platforms)
-
-            return settings.placements.every((placement) => platforms.has(PLACEMENT_PLATFORM[placement]))
-        },
-        { message: 'Each placement must belong to a selected platform', path: ['placements'] },
-    )
+    .refine(hasPlacementsOnSelectedPlatforms, {
+        message: 'Each placement must belong to a selected platform',
+        path: ['placements'],
+    })
 
 // What the client declares about the file before uploading it.
 export const uploadFileSchema = z.strictObject({
