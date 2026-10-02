@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.15.0
+
+### Minor Changes
+
+-   Two job error codes for a run that never started: `VIDEO_CHECK_FAILED` (the video couldn't be checked) and
+    `UPLOAD_FAILED` (no complete upload when the run was started, or none hours after the job was created). A job that
+    fails to start now ends with one of them instead of staying `pending`.
+
 ## 0.14.2
 
 ### Patch Changes
