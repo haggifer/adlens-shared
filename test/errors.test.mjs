@@ -16,6 +16,8 @@ test('JobErrorCode pins the codes a job can fail with', () => {
         'UNSUPPORTED_FORMAT',
         'ANALYSIS_FAILED',
         'ANALYSIS_TIMED_OUT',
+        'VIDEO_CHECK_FAILED',
+        'UPLOAD_FAILED',
     ])
     assert.deepEqual(jobErrorCodeSchema.options, Object.values(JobErrorCode))
 })

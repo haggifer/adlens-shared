@@ -8,6 +8,10 @@ export enum JobErrorCode {
     UnsupportedFormat = 'UNSUPPORTED_FORMAT',
     AnalysisFailed = 'ANALYSIS_FAILED',
     AnalysisTimedOut = 'ANALYSIS_TIMED_OUT',
+    // The video couldn't be checked (storage or the prober failed), so the run never started.
+    VideoCheckFailed = 'VIDEO_CHECK_FAILED',
+    // No complete upload when the run was started, or none hours after the job was created.
+    UploadFailed = 'UPLOAD_FAILED',
 }
 
 export enum RequestErrorCode {
