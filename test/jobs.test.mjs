@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
-import { test } from 'node:test'
 import { performance } from 'node:perf_hooks'
+import { test } from 'node:test'
 import {
     advisorySchema,
     analysisSchema,
@@ -10,24 +10,24 @@ import {
     createSampleJobInputSchema,
     findingSchema,
     jobListResponseSchema,
-    JobStatus,
     jobMediaSchema,
     jobResponseSchema,
     jobSchema,
+    JobStatus,
     jobStatusSchema,
     jobVideoResponseSchema,
     Market,
     marketSchema,
     MAX_UPLOAD_BYTES,
     metadataCheckSchema,
-    PLACEMENT_PLATFORM,
     Placement,
+    PLACEMENT_PLATFORM,
     placementSchema,
     Platform,
     platformSchema,
-    ruleScopeSchema,
     RulePlatform,
     rulePlatformSchema,
+    ruleScopeSchema,
     sampleListResponseSchema,
     sampleSchema,
     severitySchema,
