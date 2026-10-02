@@ -5,6 +5,9 @@ on:
         branches: [init-setup, main]
     pull_request:
 
+permissions:
+    contents: read
+
 jobs:
     verify:
         runs-on: ubuntu-latest
