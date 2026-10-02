@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.14.2
+
+### Patch Changes
+
+-   Package metadata only: `license` is `UNLICENSED` (no rights are granted to use the package outside AdLens) and
+    `engines.node` is `>=20`. No change to any schema or export.
+
 ## 0.14.1
 
 ### Patch Changes
