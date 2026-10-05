@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.15.1
+
+### Patch Changes
+
+-   Internal only: the settings refinement's placement check is a named function and the schema helpers sit before the
+    schemas. No change to any schema, message or export.
+
 ## 0.15.0
 
 ### Minor Changes
