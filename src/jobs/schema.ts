@@ -156,10 +156,17 @@ export const findingSchema = z.object({
     ref: z.string(),
 })
 
-// A deterministic (metadata) rule checked in code against the measured media facts.
+// A deterministic (metadata) rule checked in code against the measured media facts. `platform`, `placements` and
+// `check` are optional only because results stored before them lack them.
 export const metadataCheckSchema = z.object({
     id: z.string(),
+    platform: z.array(rulePlatformSchema).optional(),
+    // The selected placements the spec binds (a bumper's length binds YouTube Bumper only); absent when it binds every
+    // placement of its platforms.
+    placements: z.array(placementSchema).optional(),
     topic: z.string(),
+    // The rule as a sentence, e.g. "Bumper ads must be at most 6 seconds long."
+    check: z.string().optional(),
     severity: severitySchema,
     verdict: z.enum(['pass', 'fail', 'unknown']),
     detail: z.string(),

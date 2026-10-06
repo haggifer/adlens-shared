@@ -193,6 +193,24 @@ test('a metadata check is judged in code and, unlike a finding, may also conclud
     assert.equal(metadataCheckSchema.safeParse({ ...check, verdict: 'unknown' }).success, true)
 })
 
+test('a metadata check can name the platforms and selected placements its spec binds, and state its rule', () => {
+    const check = {
+        id: 'youtube.creative_spec.bumper_duration',
+        platform: [RulePlatform.Google],
+        placements: [Placement.YouTubeBumper],
+        topic: 'creative_spec:duration',
+        check: 'Bumper ads must be at most 6 seconds long.',
+        severity: 'blocker',
+        verdict: 'fail',
+        detail: 'It is 30.4 seconds long, over the 6-second limit.',
+        quote: '',
+        ref: 'https://support.google.com/google-ads/answer/2375464',
+    }
+
+    assert.equal(metadataCheckSchema.safeParse(check).success, true)
+    assert.equal(metadataCheckSchema.safeParse({ ...check, placements: ['nowhere'] }).success, false)
+})
+
 test('an advisory is surfaced, never judged, so it carries a check but no verdict', () => {
     const advisory = {
         id: 'a1',
