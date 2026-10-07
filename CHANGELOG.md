@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.0
+
+### Minor Changes
+
+-   Add `demoSchema` and `demoListResponseSchema` (types `Demo`, `DemoListResponse`): a finished analysis shown on the demo page, with its tab label, summary title and subtitle, the public job and a signed video URL.
+
 ## 0.16.0
 
 ### Minor Changes
