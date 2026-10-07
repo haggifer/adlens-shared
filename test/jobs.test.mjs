@@ -8,6 +8,8 @@ import {
     createJobInputSchema,
     createJobResponseSchema,
     createSampleJobInputSchema,
+    demoListResponseSchema,
+    demoSchema,
     findingSchema,
     jobListResponseSchema,
     jobMediaSchema,
@@ -329,4 +331,30 @@ test('samples are listed with measured media, suggested settings and a preview U
 
     assert.equal(sampleListResponseSchema.safeParse({ samples: [sample] }).success, true)
     assert.equal(sampleSchema.safeParse({ ...sample, previewUrl: 'not a url' }).success, false)
+})
+
+// ---- Demos ----
+
+test('a demo carries its summary, the analyzed job and a playable URL', () => {
+    const demo = {
+        id: 'j1',
+        slug: 'kids-show-preview',
+        label: 'Policy block',
+        title: 'Blocked on Snapchat',
+        subtitle: 'A preview of a children’s show',
+        job: {
+            id: 'j1',
+            status: 'analyzed',
+            settings: { platforms: [Platform.Snapchat] },
+            file: validFile,
+            media: validMedia,
+            createdAt: '2026-10-07T10:00:00.000Z',
+            updatedAt: '2026-10-07T10:00:00.000Z',
+        },
+        videoUrl: 'https://storage.googleapis.com/bucket/demos/kids-show-preview.mp4?X-Goog-Signature=abc',
+    }
+
+    assert.equal(demoListResponseSchema.safeParse({ demos: [demo] }).success, true)
+    assert.equal(demoSchema.safeParse({ ...demo, videoUrl: 'not a url' }).success, false)
+    assert.equal(demoSchema.safeParse({ ...demo, title: undefined }).success, false)
 })

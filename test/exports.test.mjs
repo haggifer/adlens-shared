@@ -59,6 +59,8 @@ const EXPECTED_EXPORTS = [
     'jobVideoResponseSchema',
     'sampleSchema',
     'sampleListResponseSchema',
+    'demoSchema',
+    'demoListResponseSchema',
     'createSampleJobInputSchema',
     'quotaSchema',
     'quotaResponseSchema',

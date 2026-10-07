@@ -260,6 +260,25 @@ export const sampleListResponseSchema = z.object({
     samples: z.array(sampleSchema),
 })
 
+// A finished analysis anyone can browse on the demo page: an ad AdLens stores, analyzed once by the maintainer, with a
+// short summary of what the analysis found.
+export const demoSchema = z.object({
+    id: z.string(),
+    // Stable name for links to the demo.
+    slug: z.string(),
+    // Short name for the demo's tab.
+    label: z.string(),
+    title: z.string(),
+    subtitle: z.string(),
+    job: jobSchema,
+    // Short-lived signed URL for playing the video.
+    videoUrl: z.url(),
+})
+
+export const demoListResponseSchema = z.object({
+    demos: z.array(demoSchema),
+})
+
 // Analyzing a sample needs no upload: the job points at the stored sample, and the settings may differ from the
 // suggested ones.
 export const createSampleJobInputSchema = z.strictObject({
@@ -289,5 +308,7 @@ export type JobListResponse = z.infer<typeof jobListResponseSchema>
 export type JobVideoResponse = z.infer<typeof jobVideoResponseSchema>
 export type Sample = z.infer<typeof sampleSchema>
 export type SampleListResponse = z.infer<typeof sampleListResponseSchema>
+export type Demo = z.infer<typeof demoSchema>
+export type DemoListResponse = z.infer<typeof demoListResponseSchema>
 export type CreateSampleJobInput = z.input<typeof createSampleJobInputSchema>
 export type CreateSampleJobPayload = z.output<typeof createSampleJobInputSchema>
