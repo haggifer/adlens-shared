@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.17.1
+
+### Patch Changes
+
+-   08e254f: License the package under MIT; it was published as UNLICENSED.
+
 ## 0.17.0
 
 ### Minor Changes
