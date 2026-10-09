@@ -1,8 +1,8 @@
 {
     "name": "adlens-shared",
     "version": "0.17.0",
+    "license": "MIT",
     "description": "AdLens API contract: Zod schemas (source of truth) and inferred types for the web app and the API",
-    "license": "UNLICENSED",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/haggifer/adlens-shared.git"

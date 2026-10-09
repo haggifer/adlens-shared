@@ -66,3 +66,7 @@ Consumers then receive a Dependabot pull request that bumps the exact pin.
 -   **A published, versioned package rather than a monorepo.** The web app and the API deploy independently (Vercel and
     Cloud Run), and an exact version pin makes every contract change an explicit, reviewable bump. The cost is a release
     step, which CI automates.
+
+## License
+
+[MIT](LICENSE).
