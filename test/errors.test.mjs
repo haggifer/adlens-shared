@@ -34,6 +34,8 @@ test('RequestErrorCode pins the codes a request can fail with', () => {
         'DISPOSABLE_EMAIL',
         'JOB_NOT_PENDING',
         'JOB_IN_PROGRESS',
+        'PRESET_NAME_TAKEN',
+        'PRESET_LIMIT_REACHED',
         'VALIDATION_FAILED',
         'UNAUTHENTICATED',
         'NOT_FOUND',
@@ -48,6 +50,13 @@ test('apiErrorCodeSchema accepts every job and request error code, and nothing e
         assert.equal(apiErrorCodeSchema.safeParse(code).success, true, code)
     }
     assert.equal(apiErrorCodeSchema.safeParse('NOT_A_REAL_CODE').success, false)
+})
+
+test('apiErrorCodeSchema accepts the preset codes', () => {
+    assert.equal(RequestErrorCode.PresetNameTaken, 'PRESET_NAME_TAKEN')
+    assert.equal(RequestErrorCode.PresetLimitReached, 'PRESET_LIMIT_REACHED')
+    assert.equal(apiErrorCodeSchema.safeParse('PRESET_NAME_TAKEN').success, true)
+    assert.equal(apiErrorCodeSchema.safeParse('PRESET_LIMIT_REACHED').success, true)
 })
 
 test('jobErrorCodeSchema rejects request-only codes', () => {

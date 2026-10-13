@@ -64,6 +64,14 @@ const EXPECTED_EXPORTS = [
     'createSampleJobInputSchema',
     'quotaSchema',
     'quotaResponseSchema',
+    'MAX_PRESETS',
+    'PRESET_NAME_MAX_LENGTH',
+    'presetNameSchema',
+    'savePresetInputSchema',
+    'setDefaultPresetInputSchema',
+    'presetSchema',
+    'presetResponseSchema',
+    'presetListResponseSchema',
 ]
 
 test('the ESM build exports exactly the documented public surface', () => {

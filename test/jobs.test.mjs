@@ -252,6 +252,7 @@ test('the public job carries ISO timestamps and no storage internals', () => {
         status: 'pending',
         settings: {},
         file: validFile,
+        presetName: null,
         createdAt: '2026-09-23T10:00:00.000Z',
         updatedAt: '2026-09-23T10:00:00.000Z',
     }
@@ -262,12 +263,42 @@ test('the public job carries ISO timestamps and no storage internals', () => {
     assert.equal(jobSchema.parse({ ...job, sampleId: 's1' }).sampleId, 's1')
 })
 
+test('the public job names the preset it was counted for, or null, and requires the field', () => {
+    const job = {
+        id: 'j1',
+        status: 'pending',
+        settings: {},
+        file: validFile,
+        presetName: null,
+        createdAt: '2026-09-23T10:00:00.000Z',
+        updatedAt: '2026-09-23T10:00:00.000Z',
+    }
+
+    assert.equal(jobSchema.parse({ ...job, presetName: 'Meta reels' }).presetName, 'Meta reels')
+    assert.equal(jobSchema.parse(job).presetName, null)
+    assert.equal(jobSchema.safeParse({ ...job, presetName: undefined }).success, false)
+    assert.equal(jobSchema.safeParse({ ...job, presetName: 1 }).success, false)
+})
+
+test('both job inputs accept an optional non-empty presetId', () => {
+    const upload = { settings: {}, file: validFile }
+    const sample = { sampleId: 's1', settings: {} }
+
+    assert.equal(createJobInputSchema.safeParse(upload).success, true)
+    assert.equal(createJobInputSchema.safeParse({ ...upload, presetId: 'p1' }).success, true)
+    assert.equal(createJobInputSchema.safeParse({ ...upload, presetId: '' }).success, false)
+    assert.equal(createSampleJobInputSchema.safeParse(sample).success, true)
+    assert.equal(createSampleJobInputSchema.safeParse({ ...sample, presetId: 'p1' }).success, true)
+    assert.equal(createSampleJobInputSchema.safeParse({ ...sample, presetId: '' }).success, false)
+})
+
 test('a job in error status carries a JobErrorCode, never a request-only code, and rejects an unknown status', () => {
     const job = {
         id: 'j1',
         status: 'error',
         settings: {},
         file: validFile,
+        presetName: null,
         errorCode: 'ANALYSIS_FAILED',
         createdAt: '2026-09-23T10:00:00.000Z',
         updatedAt: '2026-09-23T10:00:00.000Z',
@@ -286,6 +317,7 @@ test('response envelopes wrap the job with its upload target, list cursor or rep
         status: 'pending',
         settings: {},
         file: validFile,
+        presetName: null,
         createdAt: '2026-09-23T10:00:00.000Z',
         updatedAt: '2026-09-23T10:00:00.000Z',
     }
@@ -347,6 +379,7 @@ test('a demo carries its summary, the analyzed job and a playable URL', () => {
             status: 'analyzed',
             settings: { platforms: [Platform.Snapchat] },
             file: validFile,
+            presetName: null,
             media: validMedia,
             createdAt: '2026-10-07T10:00:00.000Z',
             updatedAt: '2026-10-07T10:00:00.000Z',

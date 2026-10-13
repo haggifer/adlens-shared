@@ -31,6 +31,10 @@ export enum RequestErrorCode {
     JobNotPending = 'JOB_NOT_PENDING',
     // The job is being verified, queued or analyzed, so it can't be deleted yet.
     JobInProgress = 'JOB_IN_PROGRESS',
+    // Another preset of this user has the name, ignoring case.
+    PresetNameTaken = 'PRESET_NAME_TAKEN',
+    // The user already keeps the most presets allowed (`MAX_PRESETS`).
+    PresetLimitReached = 'PRESET_LIMIT_REACHED',
     ValidationFailed = 'VALIDATION_FAILED',
     Unauthenticated = 'UNAUTHENTICATED',
     NotFound = 'NOT_FOUND',

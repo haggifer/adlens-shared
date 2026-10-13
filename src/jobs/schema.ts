@@ -207,6 +207,8 @@ export const jobSchema = z.object({
     errorCode: jobErrorCodeSchema.optional(),
     // Set when the job analyzes one of AdLens's sample ads instead of an upload.
     sampleId: z.string().optional(),
+    // The preset this run was counted for, as it was named then.
+    presetName: z.string().nullable(),
     createdAt: isoTimestampSchema,
     updatedAt: isoTimestampSchema,
 })
@@ -214,6 +216,8 @@ export const jobSchema = z.object({
 export const createJobInputSchema = z.strictObject({
     settings: analysisSettingsSchema,
     file: uploadFileSchema,
+    // The preset applied in the settings; the API counts the run for it only if the settings still match.
+    presetId: z.string().min(1).optional(),
     challengeToken: challengeTokenSchema.optional(),
 })
 
@@ -284,6 +288,8 @@ export const demoListResponseSchema = z.object({
 export const createSampleJobInputSchema = z.strictObject({
     sampleId: z.string().min(1),
     settings: analysisSettingsSchema,
+    // The preset applied in the settings; the API counts the run for it only if the settings still match.
+    presetId: z.string().min(1).optional(),
     challengeToken: challengeTokenSchema.optional(),
 })
 
