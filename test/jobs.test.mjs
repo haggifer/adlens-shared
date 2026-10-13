@@ -280,7 +280,7 @@ test('the public job names the preset it was counted for, or null, and requires 
     assert.equal(jobSchema.safeParse({ ...job, presetName: 1 }).success, false)
 })
 
-test('both job inputs accept an optional non-empty presetId', () => {
+test('both job inputs accept an optional non-empty presetId of at most 64 characters', () => {
     const upload = { settings: {}, file: validFile }
     const sample = { sampleId: 's1', settings: {} }
 
@@ -290,6 +290,14 @@ test('both job inputs accept an optional non-empty presetId', () => {
     assert.equal(createSampleJobInputSchema.safeParse(sample).success, true)
     assert.equal(createSampleJobInputSchema.safeParse({ ...sample, presetId: 'p1' }).success, true)
     assert.equal(createSampleJobInputSchema.safeParse({ ...sample, presetId: '' }).success, false)
+
+    for (const [schema, input] of [
+        [createJobInputSchema, upload],
+        [createSampleJobInputSchema, sample],
+    ]) {
+        assert.equal(schema.safeParse({ ...input, presetId: 'a'.repeat(64) }).success, true)
+        assert.equal(schema.safeParse({ ...input, presetId: 'a'.repeat(65) }).success, false)
+    }
 })
 
 test('a job in error status carries a JobErrorCode, never a request-only code, and rejects an unknown status', () => {

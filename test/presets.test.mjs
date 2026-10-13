@@ -61,11 +61,13 @@ test('saving a preset applies the settings rules', () => {
     )
 })
 
-test('setting the default names a preset or clears it with null, and the field is required', () => {
+test('setting the default names a preset (at most 64 characters) or clears it with null, and the field is required', () => {
     assert.equal(setDefaultPresetInputSchema.safeParse({ presetId: 'x' }).success, true)
     assert.equal(setDefaultPresetInputSchema.safeParse({ presetId: null }).success, true)
     assert.equal(setDefaultPresetInputSchema.safeParse({}).success, false)
     assert.equal(setDefaultPresetInputSchema.safeParse({ presetId: '' }).success, false)
+    assert.equal(setDefaultPresetInputSchema.safeParse({ presetId: 'a'.repeat(64) }).success, true)
+    assert.equal(setDefaultPresetInputSchema.safeParse({ presetId: 'a'.repeat(65) }).success, false)
     assert.equal(setDefaultPresetInputSchema.safeParse({ presetId: 'x', extra: 1 }).success, false)
 })
 

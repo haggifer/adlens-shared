@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { MAX_UPLOAD_BYTES } from '../common/constants.js'
 import { isoTimestampSchema } from '../common/timestamp.js'
 import { jobErrorCodeSchema } from '../errors/schema.js'
+import { presetIdSchema } from '../presets/id.js'
 
 export enum JobStatus {
     Pending = 'pending',
@@ -217,7 +218,7 @@ export const createJobInputSchema = z.strictObject({
     settings: analysisSettingsSchema,
     file: uploadFileSchema,
     // The preset applied in the settings; the API counts the run for it only if the settings still match.
-    presetId: z.string().min(1).optional(),
+    presetId: presetIdSchema.optional(),
     challengeToken: challengeTokenSchema.optional(),
 })
 
@@ -289,7 +290,7 @@ export const createSampleJobInputSchema = z.strictObject({
     sampleId: z.string().min(1),
     settings: analysisSettingsSchema,
     // The preset applied in the settings; the API counts the run for it only if the settings still match.
-    presetId: z.string().min(1).optional(),
+    presetId: presetIdSchema.optional(),
     challengeToken: challengeTokenSchema.optional(),
 })
 

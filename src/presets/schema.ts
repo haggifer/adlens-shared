@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { isoTimestampSchema } from '../common/timestamp.js'
 import { analysisSettingsSchema } from '../jobs/schema.js'
+import { presetIdSchema } from './id.js'
 
 // A user keeps at most this many presets; the API refuses a new one past it.
 export const MAX_PRESETS = 20
@@ -19,7 +20,7 @@ export const savePresetInputSchema = z.strictObject({
 })
 
 export const setDefaultPresetInputSchema = z.strictObject({
-    presetId: z.string().min(1).nullable(),
+    presetId: presetIdSchema.nullable(),
 })
 
 export const presetSchema = z.object({
