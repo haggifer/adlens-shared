@@ -243,7 +243,8 @@ export const jobListResponseSchema = z.object({
     nextCursor: z.string().nullable(),
 })
 
-// A short-lived signed URL for replaying the uploaded video.
+// A URL for replaying the job's video: short-lived and signed for an upload, stable for media AdLens publishes (a
+// sample's); either way, ask again after `expiresAt`.
 export const jobVideoResponseSchema = z.object({
     url: z.url(),
     expiresAt: isoTimestampSchema,
@@ -257,7 +258,7 @@ export const sampleSchema = z.object({
     settings: analysisSettingsSchema,
     media: jobMediaSchema,
     contentType: videoMimeTypeSchema,
-    // Short-lived signed URL for previewing the video.
+    // Stable public URL for previewing the video (signed and short-lived if it isn't in the public media bucket).
     previewUrl: z.url(),
 })
 
@@ -276,7 +277,7 @@ export const demoSchema = z.object({
     title: z.string(),
     subtitle: z.string(),
     job: jobSchema,
-    // Short-lived signed URL for playing the video.
+    // Stable public URL for playing the video (signed and short-lived if it isn't in the public media bucket).
     videoUrl: z.url(),
 })
 
