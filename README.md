@@ -23,8 +23,9 @@ import { createJobInputSchema, type Job } from 'adlens-shared'
 
 ## Develop
 
-Schemas live in `src/**/schema.ts`, each followed by its inferred types (`z.output` for what the API returns,
-`z.input` for request bodies the client fills in).
+Schemas live in `src/<area>/schema.ts` (`common`, `contact`, `errors`, `jobs`, `presets`, `quota`), each followed by its
+inferred types (`z.output` for what the API returns, `z.input` for request bodies the client fills in). The preset id
+schema sits in `src/presets/id.ts`, apart from the presets schemas, because the job inputs use it too.
 
 ```bash
 npm run build          # tsup → dist/ (ESM + CJS, with .d.ts and .d.cts)
@@ -33,11 +34,14 @@ npm run lint
 npm run check:package  # publint + are-the-types-wrong
 ```
 
-To try unreleased changes in a consumer without touching its `package.json`:
+To try unreleased changes in a consumer without touching its `package.json`, pack them under a prerelease version, so
+a local build can never pass for a published one:
 
 ```bash
-npm pack                                                             # in adlens-shared
-npm install --no-save ../adlens-shared/adlens-shared-<version>.tgz   # in the consumer
+npm run build && npm version <next>-dev.0 --no-git-tag-version   # in adlens-shared, e.g. 0.18.0-dev.0
+npm pack --pack-destination <a folder outside the repo>
+npm version <current> --no-git-tag-version --allow-same-version  # back to the released version; git shows no change
+npm install --no-save <that folder>/adlens-shared-<next>-dev.0.tgz # in the consumer
 ```
 
 Any later `npm install` or `npm ci` in the consumer restores the pinned version. Consumers pin a published version,
