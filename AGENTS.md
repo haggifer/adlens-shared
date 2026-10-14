@@ -24,6 +24,8 @@ npx changeset            # describe a change for the next release
 -   Anything that changes the published package needs a changeset. Never edit `version` or `CHANGELOG.md` by hand; run
     `npm run version-packages`.
 -   Removing or narrowing anything consumers use is a breaking change: a minor bump while the version is 0.x.
+-   Narrowing a settings enum (`Platform`, `Placement`, `Market`) also needs a migration of the API's stored presets:
+    they hold those values, so a removed one stops a preset from counting and the web drops it when applying.
 
 ## Conventions
 
