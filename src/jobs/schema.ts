@@ -208,8 +208,9 @@ export const jobSchema = z.object({
     errorCode: jobErrorCodeSchema.optional(),
     // Set when the job analyzes one of AdLens's sample ads instead of an upload.
     sampleId: z.string().optional(),
-    // The preset this run was counted for, as it was named then.
-    presetName: z.string().nullable(),
+    // The preset this run was counted for, null until a run counts for one. Its name is read from the presets, so a
+    // renamed preset shows its new name on every past run.
+    presetId: presetIdSchema.nullable(),
     createdAt: isoTimestampSchema,
     updatedAt: isoTimestampSchema,
 })
