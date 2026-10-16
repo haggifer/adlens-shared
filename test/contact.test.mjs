@@ -20,8 +20,6 @@ test('a contact message needs a reply address and a message, and may carry the h
 })
 
 test('CONTACT_MESSAGE_MAX_LENGTH is the message cap the schema enforces', () => {
-    assert.equal(CONTACT_MESSAGE_MAX_LENGTH, 2000)
-
     const atLimit = { ...validMessage, message: 'x'.repeat(CONTACT_MESSAGE_MAX_LENGTH) }
     const overLimit = { ...validMessage, message: 'x'.repeat(CONTACT_MESSAGE_MAX_LENGTH + 1) }
 

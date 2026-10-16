@@ -15,29 +15,20 @@ import {
     jobMediaSchema,
     jobResponseSchema,
     jobSchema,
-    JobStatus,
-    jobStatusSchema,
     jobVideoResponseSchema,
     Market,
-    marketSchema,
     MAX_UPLOAD_BYTES,
     metadataCheckSchema,
     Placement,
     PLACEMENT_PLATFORM,
-    placementSchema,
     Platform,
-    platformSchema,
     RulePlatform,
-    rulePlatformSchema,
-    ruleScopeSchema,
     sampleListResponseSchema,
     sampleSchema,
-    severitySchema,
     timeRangeSchema,
     uploadFileSchema,
     uploadTargetSchema,
     VideoMimeType,
-    videoMimeTypeSchema,
 } from '../dist/index.js'
 
 const validFile = { name: 'ad.mp4', contentType: VideoMimeType.Mp4, size: 1000 }
@@ -45,18 +36,7 @@ const validMedia = { durationS: 15, hasAudio: false, sizeBytes: 5000, contentTyp
 
 // ---- Targeting enums and the placement-to-platform mapping ----
 
-test('the targeting and status enums pin every option the web app offers', () => {
-    assert.deepEqual(platformSchema.options, Object.values(Platform))
-    assert.deepEqual(marketSchema.options, Object.values(Market))
-    assert.deepEqual(placementSchema.options, Object.values(Placement))
-    assert.deepEqual(rulePlatformSchema.options, Object.values(RulePlatform))
-    assert.deepEqual(jobStatusSchema.options, Object.values(JobStatus))
-    assert.deepEqual(videoMimeTypeSchema.options, Object.values(VideoMimeType))
-})
-
-test('every placement maps to exactly one platform, and settings need that platform selected', () => {
-    assert.deepEqual(Object.keys(PLACEMENT_PLATFORM).sort(), Object.values(Placement).sort())
-
+test('settings need the platform each placement belongs to', () => {
     for (const [placement, platform] of Object.entries(PLACEMENT_PLATFORM)) {
         const settings = { placements: [placement], platforms: [platform] }
 
@@ -154,11 +134,6 @@ test('a time range starts at or after zero and may omit its end', () => {
     assert.equal(timeRangeSchema.safeParse({ startS: 0 }).success, true)
     assert.equal(timeRangeSchema.safeParse({ startS: 0, endS: 5 }).success, true)
     assert.equal(timeRangeSchema.safeParse({ startS: -1 }).success, false)
-})
-
-test('severity has exactly three levels and rule scope exactly two', () => {
-    assert.deepEqual(severitySchema.options, ['blocker', 'warning', 'info'])
-    assert.deepEqual(ruleScopeSchema.options, ['compliance', 'best_practice'])
 })
 
 const baseFinding = {

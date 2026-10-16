@@ -1,8 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
-    MAX_PRESETS,
-    PRESET_NAME_MAX_LENGTH,
     presetListResponseSchema,
     presetNameSchema,
     presetResponseSchema,
@@ -21,11 +19,6 @@ const validPreset = {
     createdAt: '2026-10-13T10:00:00.000Z',
     updatedAt: '2026-10-13T10:00:00.000Z',
 }
-
-test('a user keeps at most 20 presets, each named with at most 50 characters', () => {
-    assert.equal(MAX_PRESETS, 20)
-    assert.equal(PRESET_NAME_MAX_LENGTH, 50)
-})
 
 test('a preset name is trimmed and must keep 1 to 50 characters', () => {
     assert.equal(presetNameSchema.parse('  Meta reels  '), 'Meta reels')

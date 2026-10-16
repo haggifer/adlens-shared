@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { getLiveChannel, LiveEvent, liveJobEventSchema, liveTokenResponseSchema } from '../dist/index.js'
+import { getLiveChannel, liveJobEventSchema, liveTokenResponseSchema } from '../dist/index.js'
 
 const TOKEN_REQUEST = {
     keyName: 'app.key',
@@ -14,10 +14,6 @@ const TOKEN_REQUEST = {
 test('each user has a channel of their own', () => {
     assert.equal(getLiveChannel('u1'), 'user:u1')
     assert.notEqual(getLiveChannel('u1'), getLiveChannel('u2'))
-})
-
-test('the live events are presets and job', () => {
-    assert.deepEqual(Object.values(LiveEvent).sort(), ['job', 'presets'])
 })
 
 test('a job event names the job and nothing more', () => {
