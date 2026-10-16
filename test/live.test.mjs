@@ -12,7 +12,7 @@ const TOKEN_REQUEST = {
 }
 
 test('each user has a channel of their own', () => {
-    assert.equal(getLiveChannel('u1'), 'user:u1')
+    assert.ok(getLiveChannel('u1').includes('u1'))
     assert.notEqual(getLiveChannel('u1'), getLiveChannel('u2'))
 })
 

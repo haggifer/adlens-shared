@@ -5,6 +5,7 @@ import {
     presetNameSchema,
     presetResponseSchema,
     presetSchema,
+    PRESET_NAME_MAX_LENGTH,
     savePresetInputSchema,
     setDefaultPresetInputSchema,
 } from '../dist/index.js'
@@ -20,12 +21,12 @@ const validPreset = {
     updatedAt: '2026-10-13T10:00:00.000Z',
 }
 
-test('a preset name is trimmed and must keep 1 to 50 characters', () => {
+test('a preset name is trimmed and must keep 1 to PRESET_NAME_MAX_LENGTH characters', () => {
     assert.equal(presetNameSchema.parse('  Meta reels  '), 'Meta reels')
     assert.equal(presetNameSchema.safeParse('').success, false)
     assert.equal(presetNameSchema.safeParse('   ').success, false)
-    assert.equal(presetNameSchema.safeParse('a'.repeat(50)).success, true)
-    assert.equal(presetNameSchema.safeParse('a'.repeat(51)).success, false)
+    assert.equal(presetNameSchema.safeParse('a'.repeat(PRESET_NAME_MAX_LENGTH)).success, true)
+    assert.equal(presetNameSchema.safeParse('a'.repeat(PRESET_NAME_MAX_LENGTH + 1)).success, false)
 })
 
 test('saving a preset trims the name, takes optional flags and defaults the settings lists', () => {
