@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import {
     CONTACT_ATTACHMENT_MAX_BYTES,
+    CONTACT_ATTACHMENTS_MAX_TOTAL_BYTES,
     CONTACT_MAX_ATTACHMENTS,
     CONTACT_MESSAGE_MAX_LENGTH,
     contactMessageInputSchema,
@@ -52,9 +53,11 @@ test('a sent message carries either a fresh human check or the draft id of its u
     )
 })
 
-test('image uploads are PNG, JPEG or WebP, at most 5, each and together within their size caps', () => {
+test('image uploads are PNG, JPEG or WebP, limited in number, each and together within their size caps', () => {
     const image = { name: 'screenshot.png', contentType: 'image/png', size: 3_000_000 }
     const uploads = (files) => createContactUploadsInputSchema.safeParse({ files, challengeToken: 'token' }).success
+    // Files at their own cap, one more than the total cap holds, and still within the count cap.
+    const overTotalCount = Math.floor(CONTACT_ATTACHMENTS_MAX_TOTAL_BYTES / CONTACT_ATTACHMENT_MAX_BYTES) + 1
 
     assert.equal(uploads([image]), true)
     assert.equal(
@@ -68,7 +71,7 @@ test('image uploads are PNG, JPEG or WebP, at most 5, each and together within t
     assert.equal(uploads(Array(CONTACT_MAX_ATTACHMENTS + 1).fill(image)), false)
     assert.equal(uploads([{ ...image, contentType: 'image/gif' }]), false)
     assert.equal(uploads([{ ...image, size: CONTACT_ATTACHMENT_MAX_BYTES + 1 }]), false)
-    // 4 × 7 MB fits each file's cap but not the 25 MB total.
-    assert.equal(uploads(Array(4).fill({ ...image, size: 7_000_000 })), false)
+    assert.ok(overTotalCount <= CONTACT_MAX_ATTACHMENTS)
+    assert.equal(uploads(Array(overTotalCount).fill({ ...image, size: CONTACT_ATTACHMENT_MAX_BYTES })), false)
     assert.equal(createContactUploadsInputSchema.safeParse({ files: [image] }).success, false)
 })

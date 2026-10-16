@@ -29,7 +29,7 @@ test('a preset name is trimmed and must keep 1 to PRESET_NAME_MAX_LENGTH charact
     assert.equal(presetNameSchema.safeParse('a'.repeat(PRESET_NAME_MAX_LENGTH + 1)).success, false)
 })
 
-test('saving a preset trims the name, takes optional flags and defaults the settings lists', () => {
+test('saving a preset trims the name, takes optional flags, defaults the settings lists and rejects unknown keys', () => {
     const saved = savePresetInputSchema.parse({ name: '  Meta reels  ', settings: {} })
 
     assert.deepEqual(saved, { name: 'Meta reels', settings: { platforms: [], placements: [], markets: [] } })
@@ -37,13 +37,6 @@ test('saving a preset trims the name, takes optional flags and defaults the sett
     assert.equal(savePresetInputSchema.safeParse({ name: 'a', settings: {}, overwrite: false }).success, true)
     assert.equal(savePresetInputSchema.safeParse({ name: 'a', settings: {}, isDefault: 'yes' }).success, false)
     assert.equal(savePresetInputSchema.safeParse({ name: 'a', settings: {}, overwrite: 1 }).success, false)
-})
-
-test('saving a preset rejects a blank or too long name and unknown keys', () => {
-    assert.equal(savePresetInputSchema.safeParse({ name: '', settings: {} }).success, false)
-    assert.equal(savePresetInputSchema.safeParse({ name: '   ', settings: {} }).success, false)
-    assert.equal(savePresetInputSchema.safeParse({ name: 'a'.repeat(51), settings: {} }).success, false)
-    assert.equal(savePresetInputSchema.safeParse({ name: 'a'.repeat(50), settings: {} }).success, true)
     assert.equal(savePresetInputSchema.safeParse({ name: 'a', settings: {}, userId: 'u1' }).success, false)
     assert.equal(savePresetInputSchema.safeParse({ settings: {} }).success, false)
 })

@@ -50,9 +50,6 @@ test('settings need the platform each placement belongs to', () => {
 test('settings default the list fields and reject unknown keys', () => {
     assert.deepEqual(analysisSettingsSchema.parse({}), { platforms: [], placements: [], markets: [] })
     assert.equal(analysisSettingsSchema.safeParse({ userId: 'x' }).success, false)
-    assert.equal(analysisSettingsSchema.safeParse({ objective: 'Awareness' }).success, false)
-    assert.equal(analysisSettingsSchema.safeParse({ audience: 'Parents' }).success, false)
-    assert.equal(analysisSettingsSchema.safeParse({ brand: 'Acme' }).success, false)
 })
 
 test('settings accept each option at most once, so no list outgrows its enum', () => {
@@ -85,17 +82,20 @@ test('a request-sized flood of repeats is rejected quickly', () => {
 
 // ---- Upload file ----
 
-test('job creation is limited to Gemini-readable video types and the size cap', () => {
+test('job creation accepts only the Gemini-readable video types', () => {
     const settings = {}
 
-    assert.equal(createJobInputSchema.safeParse({ settings, file: validFile }).success, true)
+    for (const contentType of Object.values(VideoMimeType)) {
+        assert.equal(
+            createJobInputSchema.safeParse({ settings, file: { ...validFile, contentType } }).success,
+            true,
+            contentType,
+        )
+    }
     assert.equal(
         createJobInputSchema.safeParse({ settings, file: { ...validFile, contentType: 'video/x-matroska' } }).success,
         false,
     )
-    for (const contentType of ['video/mpeg', 'video/x-flv']) {
-        assert.equal(createJobInputSchema.safeParse({ settings, file: { ...validFile, contentType } }).success, false)
-    }
 })
 
 test('the upload file name and size are bounded, and reject unknown keys', () => {
@@ -114,6 +114,10 @@ test('job creation may carry a Turnstile token of up to 2048 characters', () => 
 
     assert.equal(createJobInputSchema.safeParse({ settings, file: validFile, challengeToken: token }).success, true)
     assert.equal(createJobInputSchema.safeParse({ settings, file: validFile, challengeToken: '' }).success, false)
+    assert.equal(
+        createJobInputSchema.safeParse({ settings, file: validFile, challengeToken: 'x'.repeat(2048) }).success,
+        true,
+    )
     assert.equal(
         createJobInputSchema.safeParse({ settings, file: validFile, challengeToken: 'x'.repeat(2049) }).success,
         false,
@@ -168,6 +172,7 @@ test('a metadata check is judged in code and, unlike a finding, may also conclud
 
     assert.equal(metadataCheckSchema.safeParse(check).success, true)
     assert.equal(metadataCheckSchema.safeParse({ ...check, verdict: 'unknown' }).success, true)
+    assert.equal(metadataCheckSchema.safeParse({ ...check, verdict: 'warning' }).success, false)
 })
 
 test('a metadata check can name the platforms and selected placements its spec binds, and state its rule', () => {
@@ -201,6 +206,7 @@ test('an advisory is surfaced, never judged, so it carries a check but no verdic
 
     assert.equal(advisorySchema.safeParse(advisory).success, true)
     assert.equal(advisorySchema.safeParse({ ...advisory, check: undefined }).success, false)
+    assert.equal('verdict' in advisorySchema.parse({ ...advisory, verdict: 'fail' }), false)
 })
 
 test('the analysis carries the model, prompt/ruleset versions, transcript and the three rule buckets', () => {

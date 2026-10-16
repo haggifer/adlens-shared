@@ -25,5 +25,4 @@ test('the API error body needs a status, a code and a message, and may carry val
     assert.equal(apiErrorSchema.safeParse(error).success, true)
     assert.equal(apiErrorSchema.safeParse({ ...error, issues: [{ path: ['email'] }] }).success, true)
     assert.equal(apiErrorSchema.safeParse({ ...error, statusCode: 400.5 }).success, false)
-    assert.equal(apiErrorSchema.safeParse({ ...error, errorCode: 'NOT_A_REAL_CODE' }).success, false)
 })

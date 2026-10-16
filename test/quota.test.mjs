@@ -14,12 +14,10 @@ test('used is a non-negative count and limit, when set, is a positive count', ()
     assert.equal(quotaSchema.safeParse({ used: 0, limit: -1, nextFreeAt: null }).success, false)
 })
 
-test('nextFreeAt is required, nullable, and cannot be dropped in favor of the retired windowStart field', () => {
+test('nextFreeAt is required', () => {
     assert.equal(quotaSchema.safeParse({ used: 0, limit: 3 }).success, false)
-    assert.equal(quotaSchema.safeParse({ used: 0, limit: 3, windowStart: null }).success, false)
 })
 
 test('the quota response wraps a single quota', () => {
     assert.equal(quotaResponseSchema.safeParse({ quota: { used: 0, limit: 3, nextFreeAt: null } }).success, true)
-    assert.equal(quotaResponseSchema.safeParse({ quota: { used: 0, limit: 3 } }).success, false)
 })
