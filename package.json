@@ -1,6 +1,6 @@
 {
     "name": "adlens-shared",
-    "version": "0.18.0",
+    "version": "0.19.0",
     "license": "MIT",
     "description": "AdLens API contract: Zod schemas (source of truth) and inferred types for the web app and the API",
     "repository": {

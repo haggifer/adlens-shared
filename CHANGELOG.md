@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.19.0
+
+### Minor Changes
+
+-   c0a7fed: Add live updates: the `LiveEvent` enum (`presets`, `job`), `liveJobEventSchema`, `getLiveChannel(userId)`, and
+    `liveTokenRequestSchema` / `liveTokenResponseSchema` for the API's `GET /v1/live/token`.
+
 ## 0.18.0
 
 ### Minor Changes
