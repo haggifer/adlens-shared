@@ -12,7 +12,7 @@ import {
     demoSchema,
     findingSchema,
     isJobRestartable,
-    JOB_START_WINDOW_MS,
+    JOB_RESTART_WINDOW_MS,
     JobErrorCode,
     jobListResponseSchema,
     jobMediaSchema,
@@ -388,7 +388,7 @@ test('a demo carries its summary, the analyzed job and a playable URL', () => {
 
 // ---- Restarting a failed job ----
 
-test('a job can be restarted only after a failure its video is not to blame for, within the start window', () => {
+test('a job can be restarted only after a failure its video is not to blame for, within the restart window', () => {
     const createdAt = '2026-10-19T10:00:00.000Z'
     const created = Date.parse(createdAt)
     const failed = { status: JobStatus.Error, errorCode: RESTARTABLE_JOB_ERRORS[0], createdAt }
@@ -402,6 +402,6 @@ test('a job can be restarted only after a failure its video is not to blame for,
     }
     assert.equal(isJobRestartable({ ...failed, errorCode: undefined }, created), false)
     assert.equal(isJobRestartable({ ...failed, status: JobStatus.Analyzed }, created), false)
-    assert.equal(isJobRestartable(failed, created + JOB_START_WINDOW_MS - 1), true)
-    assert.equal(isJobRestartable(failed, created + JOB_START_WINDOW_MS), false)
+    assert.equal(isJobRestartable(failed, created + JOB_RESTART_WINDOW_MS - 1), true)
+    assert.equal(isJobRestartable(failed, created + JOB_RESTART_WINDOW_MS), false)
 })
