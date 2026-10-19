@@ -12,8 +12,7 @@ import {
     demoSchema,
     findingSchema,
     isJobRestartable,
-    JOB_RESTART_WINDOW_MS,
-    JobErrorCode,
+    JOB_START_WINDOW_MS,
     jobListResponseSchema,
     jobMediaSchema,
     jobResponseSchema,
@@ -26,7 +25,6 @@ import {
     Placement,
     PLACEMENT_PLATFORM,
     Platform,
-    RESTARTABLE_JOB_ERRORS,
     RulePlatform,
     sampleListResponseSchema,
     sampleSchema,
@@ -388,20 +386,28 @@ test('a demo carries its summary, the analyzed job and a playable URL', () => {
 
 // ---- Restarting a failed job ----
 
-test('a job can be restarted only after a failure its video is not to blame for, within the restart window', () => {
+test('a failed job can be restarted once, within the start window', () => {
     const createdAt = '2026-10-19T10:00:00.000Z'
     const created = Date.parse(createdAt)
-    const failed = { status: JobStatus.Error, errorCode: RESTARTABLE_JOB_ERRORS[0], createdAt }
-    const rejectedCodes = Object.values(JobErrorCode).filter((code) => !RESTARTABLE_JOB_ERRORS.includes(code))
+    const failed = { status: JobStatus.Error, createdAt }
 
-    for (const errorCode of RESTARTABLE_JOB_ERRORS) {
-        assert.equal(isJobRestartable({ ...failed, errorCode }, created), true, errorCode)
-    }
-    for (const errorCode of rejectedCodes) {
-        assert.equal(isJobRestartable({ ...failed, errorCode }, created), false, errorCode)
-    }
-    assert.equal(isJobRestartable({ ...failed, errorCode: undefined }, created), false)
+    assert.equal(isJobRestartable(failed, created + JOB_START_WINDOW_MS - 1), true)
+    assert.equal(isJobRestartable(failed, created + JOB_START_WINDOW_MS), false)
+    assert.equal(isJobRestartable({ ...failed, restartedAs: 'job-2' }, created), false)
     assert.equal(isJobRestartable({ ...failed, status: JobStatus.Analyzed }, created), false)
-    assert.equal(isJobRestartable(failed, created + JOB_RESTART_WINDOW_MS - 1), true)
-    assert.equal(isJobRestartable(failed, created + JOB_RESTART_WINDOW_MS), false)
+})
+
+test('the public job may name the job that restarted it', () => {
+    const job = {
+        id: 'j1',
+        status: JobStatus.Error,
+        settings: {},
+        file: validFile,
+        presetId: null,
+        createdAt: '2026-10-19T10:00:00.000Z',
+        updatedAt: '2026-10-19T10:00:00.000Z',
+    }
+
+    assert.equal(jobSchema.safeParse(job).success, true)
+    assert.equal(jobSchema.parse({ ...job, restartedAs: 'j2' }).restartedAs, 'j2')
 })

@@ -211,6 +211,9 @@ export const jobSchema = z.object({
     // The preset this run was counted for, null until a run counts for one. Its name is read from the presets, so a
     // renamed preset shows its new name on every past run.
     presetId: presetIdSchema.nullable(),
+    // Set once a failed job was restarted: the id of the job that runs it again on the same video. Job lists leave such
+    // a job out; it is kept as the record of the failed run.
+    restartedAs: z.string().optional(),
     createdAt: isoTimestampSchema,
     updatedAt: isoTimestampSchema,
 })
