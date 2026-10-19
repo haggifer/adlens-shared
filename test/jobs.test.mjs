@@ -11,10 +11,14 @@ import {
     demoListResponseSchema,
     demoSchema,
     findingSchema,
+    isJobRestartable,
+    JOB_START_WINDOW_MS,
+    JobErrorCode,
     jobListResponseSchema,
     jobMediaSchema,
     jobResponseSchema,
     jobSchema,
+    JobStatus,
     jobVideoResponseSchema,
     Market,
     MAX_UPLOAD_BYTES,
@@ -22,6 +26,7 @@ import {
     Placement,
     PLACEMENT_PLATFORM,
     Platform,
+    RESTARTABLE_JOB_ERRORS,
     RulePlatform,
     sampleListResponseSchema,
     sampleSchema,
@@ -379,4 +384,24 @@ test('a demo carries its summary, the analyzed job and a playable URL', () => {
     assert.equal(demoListResponseSchema.safeParse({ demos: [demo] }).success, true)
     assert.equal(demoSchema.safeParse({ ...demo, videoUrl: 'not a url' }).success, false)
     assert.equal(demoSchema.safeParse({ ...demo, title: undefined }).success, false)
+})
+
+// ---- Restarting a failed job ----
+
+test('a job can be restarted only after a failure its video is not to blame for, within the start window', () => {
+    const createdAt = '2026-10-19T10:00:00.000Z'
+    const created = Date.parse(createdAt)
+    const failed = { status: JobStatus.Error, errorCode: RESTARTABLE_JOB_ERRORS[0], createdAt }
+    const rejectedCodes = Object.values(JobErrorCode).filter((code) => !RESTARTABLE_JOB_ERRORS.includes(code))
+
+    for (const errorCode of RESTARTABLE_JOB_ERRORS) {
+        assert.equal(isJobRestartable({ ...failed, errorCode }, created), true, errorCode)
+    }
+    for (const errorCode of rejectedCodes) {
+        assert.equal(isJobRestartable({ ...failed, errorCode }, created), false, errorCode)
+    }
+    assert.equal(isJobRestartable({ ...failed, errorCode: undefined }, created), false)
+    assert.equal(isJobRestartable({ ...failed, status: JobStatus.Analyzed }, created), false)
+    assert.equal(isJobRestartable(failed, created + JOB_START_WINDOW_MS - 1), true)
+    assert.equal(isJobRestartable(failed, created + JOB_START_WINDOW_MS), false)
 })

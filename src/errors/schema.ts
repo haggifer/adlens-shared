@@ -29,6 +29,8 @@ export enum RequestErrorCode {
     // Sent by sign-up as a Better Auth error code, not in the API error body.
     DisposableEmail = 'DISPOSABLE_EMAIL',
     JobNotPending = 'JOB_NOT_PENDING',
+    // The job can't be restarted (`isJobRestartable`): it didn't fail, failed because of its video, or is too old.
+    JobNotRestartable = 'JOB_NOT_RESTARTABLE',
     // The job is being verified, queued or analyzed, so it can't be deleted yet.
     JobInProgress = 'JOB_IN_PROGRESS',
     // Another preset of this user has the name, ignoring case.

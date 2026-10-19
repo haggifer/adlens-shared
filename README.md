@@ -26,6 +26,8 @@ import { createJobInputSchema, type Job } from 'adlens-shared'
 Schemas live in `src/<area>/schema.ts` (`common`, `contact`, `errors`, `jobs`, `live`, `presets`, `quota`), each followed by its
 inferred types (`z.output` for what the API returns, `z.input` for request bodies the client fills in). The preset id
 schema sits in `src/presets/id.ts`, apart from the presets schemas, because the job inputs use it too.
+`src/jobs/restart.ts` holds the one rule both sides apply to restarting a failed job: the API refuses what
+`isJobRestartable` refuses, and the web offers a restart only where it allows one.
 
 ```bash
 npm run build          # tsup → dist/ (ESM + CJS, with .d.ts and .d.cts)
