@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.19.1
+
+### Patch Changes
+
+-   Tests only: the contract tests no longer repeat static values and can fail. The published code is unchanged.
+
 ## 0.19.0
 
 ### Minor Changes
