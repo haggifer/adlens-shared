@@ -8,6 +8,8 @@ export enum JobErrorCode {
     UnsupportedFormat = 'UNSUPPORTED_FORMAT',
     AnalysisFailed = 'ANALYSIS_FAILED',
     AnalysisTimedOut = 'ANALYSIS_TIMED_OUT',
+    // The AI model failed on its side: it was overloaded, rate-limited, erred or didn't answer in time.
+    ModelUnavailable = 'MODEL_UNAVAILABLE',
     // The video couldn't be checked (storage or the prober failed), so the run never started.
     VideoCheckFailed = 'VIDEO_CHECK_FAILED',
     // No complete upload when the run was started, or none hours after the job was created.

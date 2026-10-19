@@ -10,6 +10,7 @@ export const JOB_START_WINDOW_MS = 6 * 60 * 60 * 1000
 export const RESTARTABLE_JOB_ERRORS: JobErrorCode[] = [
     JobErrorCode.AnalysisFailed,
     JobErrorCode.AnalysisTimedOut,
+    JobErrorCode.ModelUnavailable,
     JobErrorCode.VideoCheckFailed,
 ]
 
