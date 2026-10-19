@@ -1,5 +1,11 @@
 # adlens-shared
 
+> Part of **[AdLens](https://github.com/haggifer/adlens)**, AI policy checks for video ads · [Live](https://www.useadlens.com)
+
+[![CI](https://github.com/haggifer/adlens-shared/actions/workflows/ci.yml/badge.svg?branch=init-setup)](https://github.com/haggifer/adlens-shared/actions/workflows/ci.yml)
+[![npm](https://img.shields.io/npm/v/adlens-shared)](https://www.npmjs.com/package/adlens-shared)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+
 The AdLens API contract: **Zod schemas** that are the single source of truth for requests, responses, errors and the
 public job shape, plus the TypeScript types inferred from them. Both sides of AdLens consume it, so validation and
 types can't drift between them:
