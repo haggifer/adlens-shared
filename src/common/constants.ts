@@ -1,6 +1,6 @@
-export const MAX_DURATION_S = 60
+export const MAX_DURATION_S = 3 * 60
 
-export const MAX_UPLOAD_BYTES = 200 * 1000 * 1000
+export const MAX_UPLOAD_BYTES = 50 * 1000 * 1000
 
 // Enforced by the API's Better Auth config; the web validates and hints with the same value.
 export const MIN_PASSWORD_LENGTH = 8
