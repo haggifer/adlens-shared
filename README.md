@@ -56,7 +56,8 @@ Releases are published by CI with npm trusted publishing (OIDC, no token, proven
 1. Describe the change: `npx changeset` (pick patch / minor / major).
 2. Apply it: `npm run version-packages` bumps `version`, writes `CHANGELOG.md` and syncs the lockfile. Commit them.
 3. Tag and push the tag by name: `git tag v<version> && git push origin HEAD v<version>`. The `Release` workflow checks
-   that the tag matches `package.json` and runs `npm publish`.
+   that the tagged commit is on `init-setup` and that the tag matches `package.json`, runs CI's checks again, and runs
+   `npm publish`.
 
 Consumers then receive a Dependabot pull request that bumps the exact pin.
 
