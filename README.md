@@ -2,7 +2,7 @@
 
 > Part of **[AdLens](https://github.com/haggifer/adlens)**, AI policy checks for video ads · [Live](https://www.useadlens.com)
 
-[![CI](https://github.com/haggifer/adlens-shared/actions/workflows/ci.yml/badge.svg?branch=init-setup)](https://github.com/haggifer/adlens-shared/actions/workflows/ci.yml)
+[![CI](https://github.com/haggifer/adlens-shared/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/haggifer/adlens-shared/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/adlens-shared)](https://www.npmjs.com/package/adlens-shared)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
@@ -62,7 +62,7 @@ Releases are published by CI with npm trusted publishing (OIDC, no token, proven
 1. Describe the change: `npx changeset` (pick patch / minor / major).
 2. Apply it: `npm run version-packages` bumps `version`, writes `CHANGELOG.md` and syncs the lockfile. Commit them.
 3. Tag and push the tag by name: `git tag v<version> && git push origin HEAD v<version>`. The `Release` workflow checks
-   that the tagged commit is on `init-setup` and that the tag matches `package.json`, runs CI's checks again, and runs
+   that the tagged commit is on `main` and that the tag matches `package.json`, runs CI's checks again, and runs
    `npm publish`.
 
 Consumers then receive a Dependabot pull request that bumps the exact pin.

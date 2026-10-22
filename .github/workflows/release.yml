@@ -22,8 +22,8 @@ jobs:
                   node-version-file: .nvmrc
                   registry-url: https://registry.npmjs.org
                   cache: npm
-            - name: Tag is on init-setup
-              run: git merge-base --is-ancestor "$GITHUB_SHA" origin/init-setup
+            - name: Tag is on main
+              run: git merge-base --is-ancestor "$GITHUB_SHA" origin/main
             - name: Tag matches the package version
               run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
             - run: npm ci
