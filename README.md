@@ -13,7 +13,7 @@ types can't drift between them:
 -   [`adlens`](https://github.com/haggifer/adlens): the Next.js web app (ESM)
 -   [`adlens-api`](https://github.com/haggifer/adlens-api): the NestJS API and analysis worker (CommonJS)
 
-## Install
+## Getting started
 
 ```bash
 npm install adlens-shared zod
@@ -21,19 +21,11 @@ npm install adlens-shared zod
 
 `zod` (v4) is a peer dependency, so the consumer's own copy is used.
 
-## Usage
-
 ```ts
 import { createJobInputSchema, type Job } from 'adlens-shared'
 ```
 
-## Develop
-
-Schemas live in `src/<area>/schema.ts` (`admin`, `common`, `contact`, `errors`, `jobs`, `live`, `presets`, `quota`), each followed by its
-inferred types (`z.output` for what the API returns, `z.input` for request bodies the client fills in). The preset id
-schema sits in `src/presets/id.ts`, apart from the presets schemas, because the job inputs use it too.
-`src/jobs/restart.ts` holds the one rule both sides apply to restarting a failed job: the API refuses what
-`isJobRestartable` refuses, and the web offers a restart only where it allows one.
+To work on the package:
 
 ```bash
 npm run build          # tsup → dist/ (ESM + CJS, with .d.ts and .d.cts)
@@ -54,6 +46,14 @@ npm install --no-save <that folder>/adlens-shared-<next>-dev.0.tgz # in the cons
 
 Any later `npm install` or `npm ci` in the consumer restores the pinned version. Consumers pin a published version,
 never a `file:` dependency, which would only resolve on a developer's machine.
+
+## Structure
+
+Schemas live in `src/<area>/schema.ts` (`admin`, `common`, `contact`, `errors`, `jobs`, `live`, `presets`, `quota`), each followed by its
+inferred types (`z.output` for what the API returns, `z.input` for request bodies the client fills in). The preset id
+schema sits in `src/presets/id.ts`, apart from the presets schemas, because the job inputs use it too.
+`src/jobs/restart.ts` holds the one rule both sides apply to restarting a failed job: the API refuses what
+`isJobRestartable` refuses, and the web offers a restart only where it allows one.
 
 ## Release
 
