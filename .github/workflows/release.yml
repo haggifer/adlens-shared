@@ -15,12 +15,21 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v6
+              with:
+                  fetch-depth: 0
             - uses: actions/setup-node@v6
               with:
                   node-version-file: .nvmrc
                   registry-url: https://registry.npmjs.org
                   cache: npm
-            - run: npm ci
+            - name: Tag is on init-setup
+              run: git merge-base --is-ancestor "$GITHUB_SHA" origin/init-setup
             - name: Tag matches the package version
               run: test "v$(node -p "require('./package.json').version")" = "$GITHUB_REF_NAME"
+            - run: npm ci
+            - run: npm run lint
+            - run: npx tsc --noEmit
+            - run: npm run build
+            - run: npm test
+            - run: npm run check:package
             - run: npm publish

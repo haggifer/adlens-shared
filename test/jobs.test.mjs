@@ -37,8 +37,6 @@ import {
 const validFile = { name: 'ad.mp4', contentType: VideoMimeType.Mp4, size: 1000 }
 const validMedia = { durationS: 15, hasAudio: false, sizeBytes: 5000, contentType: VideoMimeType.Mp4 }
 
-// ---- Targeting enums and the placement-to-platform mapping ----
-
 test('settings need the platform each placement belongs to', () => {
     for (const [placement, platform] of Object.entries(PLACEMENT_PLATFORM)) {
         const settings = { placements: [placement], platforms: [platform] }
@@ -47,8 +45,6 @@ test('settings need the platform each placement belongs to', () => {
         assert.equal(analysisSettingsSchema.safeParse({ ...settings, platforms: [] }).success, false, placement)
     }
 })
-
-// ---- Analysis settings ----
 
 test('settings default the list fields and reject unknown keys', () => {
     assert.deepEqual(analysisSettingsSchema.parse({}), { platforms: [], placements: [], markets: [] })
@@ -82,8 +78,6 @@ test('a request-sized flood of repeats is rejected quickly', () => {
     assert.equal(analysisSettingsSchema.safeParse(flood).success, false)
     assert.ok(performance.now() - startedAt < 200)
 })
-
-// ---- Upload file ----
 
 test('job creation accepts only the Gemini-readable video types', () => {
     const settings = {}
@@ -127,8 +121,6 @@ test('job creation may carry a Turnstile token of up to 2048 characters', () => 
     )
     assert.equal(createJobInputSchema.safeParse({ settings, file: validFile, extra: 1 }).success, false)
 })
-
-// ---- Measured media and rule-check pieces of an analysis ----
 
 test('measured media requires a positive duration and size; width and height are optional', () => {
     assert.equal(jobMediaSchema.safeParse(validMedia).success, true)
@@ -228,8 +220,6 @@ test('the analysis carries the model, prompt/ruleset versions, transcript and th
     assert.equal(analysisSchema.safeParse({ ...analysis, completedAt: 'not-a-date' }).success, false)
 })
 
-// ---- The public job ----
-
 test('the public job carries ISO timestamps and no storage internals', () => {
     const job = {
         id: 'j1',
@@ -301,8 +291,6 @@ test('a job in error status carries a JobErrorCode, never a request-only code, a
     assert.equal(jobSchema.safeParse({ ...job, status: 'not-a-status' }).success, false)
 })
 
-// ---- Response envelopes ----
-
 test('response envelopes wrap the job with its upload target, list cursor or replay URL', () => {
     const job = {
         id: 'j1',
@@ -326,8 +314,6 @@ test('response envelopes wrap the job with its upload target, list cursor or rep
         true,
     )
 })
-
-// ---- Samples ----
 
 test('a sample job names the sample and its settings, never a file or storage path', () => {
     assert.equal(createSampleJobInputSchema.safeParse({ sampleId: 's1', settings: {} }).success, true)
@@ -357,8 +343,6 @@ test('samples are listed with measured media, suggested settings and a preview U
     assert.equal(sampleSchema.safeParse({ ...sample, previewUrl: 'not a url' }).success, false)
 })
 
-// ---- Demos ----
-
 test('a demo carries its summary, the analyzed job and a playable URL', () => {
     const demo = {
         id: 'j1',
@@ -383,8 +367,6 @@ test('a demo carries its summary, the analyzed job and a playable URL', () => {
     assert.equal(demoSchema.safeParse({ ...demo, videoUrl: 'not a url' }).success, false)
     assert.equal(demoSchema.safeParse({ ...demo, title: undefined }).success, false)
 })
-
-// ---- Restarting a failed job ----
 
 test('a failed job can be restarted once, within the start window', () => {
     const createdAt = '2026-10-19T10:00:00.000Z'

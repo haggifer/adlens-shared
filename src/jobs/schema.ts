@@ -105,7 +105,6 @@ export const videoMimeTypeSchema = z.enum(VideoMimeType)
 export const severitySchema = z.enum(['blocker', 'warning', 'info'])
 export const ruleScopeSchema = z.enum(['compliance', 'best_practice'])
 
-// Strict: a client can only set allowlisted fields. A placement is only valid with its platform selected.
 export const analysisSettingsSchema = z
     .strictObject({
         platforms: uniqueOptions(platformSchema),
@@ -124,8 +123,8 @@ export const uploadFileSchema = z.strictObject({
     size: z.number().int().positive().max(MAX_UPLOAD_BYTES),
 })
 
-// A Cloudflare Turnstile token: single-use, at most 2048 characters. Job creation sends one only when a rule asks for it;
-// a Contact message sends one unless it sends an upload draft id.
+// A Cloudflare Turnstile token: single-use. Job creation sends one only when a rule asks for it; a Contact message
+// sends one unless it sends an upload draft id.
 export const challengeTokenSchema = z.string().min(1).max(2048)
 
 // Facts measured from the uploaded object during verification, not taken from the client.

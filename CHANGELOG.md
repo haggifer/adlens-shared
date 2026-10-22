@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.20.0
+
+### Minor Changes
+
+-   d495fff: Add restarting a failed analysis: `isJobRestartable(job, now?)` (a failed job, not restarted yet, within
+    `JOB_START_WINDOW_MS` of its creation), `restartedAs` on the public job (the job that runs a restarted one again), and
+    the `JOB_NOT_RESTARTABLE` request error code for the API's `POST /v1/jobs/:id/restart`. Add the `MODEL_UNAVAILABLE`
+    job error code for a run the AI model failed on its side (overloaded, rate-limited, erred or too slow).
+-   3708cb2: Add the admin response contract: `adminJobsResponseSchema` and `adminUsersResponseSchema`, with the
+    `AdminJob`, `AdminUser` and `AdminModelCall` records they carry, for the API's admin routes and the web app's Admin
+    page.
+-   0297263: Change the video limits: `MAX_DURATION_S` 60 → 180 (3 minutes), `MAX_UPLOAD_BYTES` 200 MB → 50 MB. The
+    smaller upload cap narrows the job input schemas, so a client still allowing up to 200 MB is refused above 50 MB.
+
 ## 0.19.1
 
 ### Patch Changes
