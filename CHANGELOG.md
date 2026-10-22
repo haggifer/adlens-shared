@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.0
+
+### Major Changes
+
+-   cabf937: First stable release. The contract is unchanged from 0.20.0; from now on, removing or narrowing anything
+    consumers use bumps the major version.
+
 ## 0.20.0
 
 ### Minor Changes
